@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Obras Públicas — Municipio de Puebla</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
+html,body{height:100%;overflow:hidden}
+body{display:flex;flex-direction:column;background:#f0ede8}
+
+/* LOGIN SCREEN */
+#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#4a1942 0%,#7b2d72 100%);display:flex;align-items:center;justify-content:center;z-index:99999}
+#login-screen.hidden{display:none}
+.login-box{background:#fff;border-radius:16px;padding:40px 36px;text-align:center;width:360px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-box h1{font-size:20px;font-weight:700;color:#4a1942;margin-bottom:4px}
+.login-box p{font-size:13px;color:#888;margin-bottom:28px;line-height:1.5}
+.login-box img{width:64px;margin-bottom:16px}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1.5px solid #ddd;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;color:#333;width:100%;transition:all .2s}
+.btn-google:hover{background:#f5f5f5;border-color:#bbb;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.btn-google svg{flex-shrink:0}
+.login-error{margin-top:12px;font-size:12px;color:#c62828;display:none}
+.login-note{margin-top:20px;font-size:11px;color:#bbb;line-height:1.5}
+
+/* VIEWER BADGE */
+#mode-badge{position:fixed;bottom:12px;left:12px;z-index:1000;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;pointer-events:none}
+#mode-badge.viewer{background:rgba(0,0,0,.55);color:#fff}
+#mode-badge.editor{background:#2E7D32;color:#fff}
+
+/* HEADER */
+#header{background:#4a1942;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
+#header h1{font-size:14px;font-weight:600}
+#header p{font-size:10px;opacity:.6;margin-top:1px}
+#header-btns{display:flex;gap:6px;flex-shrink:0;align-items:center}
+.hbtn{color:#fff;border:1.5px solid rgba(255,255,255,.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer}
+.hbtn-purple{background:#7b2d72}.hbtn-purple:hover{background:#9c3a91}
+.hbtn-blue{background:#1a5276}.hbtn-blue:hover{background:#21618C}
+.hbtn-red{background:#922b21;border-color:rgba(255,255,255,.2)}.hbtn-red:hover{background:#b03a2e}
+#user-info{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.8)}
+#user-avatar{width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4)}
+
+/* MAP MODE BAR */
+#map-mode-bar{display:none;padding:9px 16px;font-size:12px;font-weight:600;text-align:center;flex-shrink:0}
+#map-mode-bar.pick{display:flex;justify-content:center;align-items:center;gap:8px;background:#E3F2FD;border-bottom:2px solid #1565C0;color:#0D47A1}
+#map-mode-bar.trace{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;background:#E8F5E9;border-bottom:2px solid #2E7D32;color:#1B5E20}
+
+/* CONTROLS */
+#controls{background:#fff;padding:7px 12px;display:flex;gap:7px;flex-wrap:wrap;border-bottom:1px solid #e0e0e0;flex-shrink:0;align-items:center}
+.filter-btn{border:1.5px solid #ddd;background:#fff;padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:500;color:#555}
+.filter-btn.active{color:#fff;border-color:transparent}
+.filter-btn[data-status="todas"].active{background:#4a1942}
+.filter-btn[data-status="proyectada"].active{background:#E67E22}
+.filter-btn[data-status="proceso"].active{background:#1565C0}
+.filter-btn[data-status="terminada"].active{background:#2E7D32}
+#search{border:1.5px solid #ddd;border-radius:20px;padding:5px 12px;font-size:12px;outline:none;width:160px;color:#333}
+#search:focus{border-color:#4a1942}
+
+/* MAIN */
+#main{display:flex;flex:1;overflow:hidden;min-height:0}
+#map{flex:1;min-width:0}
+#panel{width:280px;background:#fff;border-left:1px solid #e0e0e0;overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
+#panel-header{padding:10px 12px;border-bottom:1px solid #eee;font-size:13px;font-weight:600;color:#4a1942;background:#fdf8fd;flex-shrink:0}
+#obra-list{flex:1;overflow-y:auto}
+.obra-item{padding:9px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.obra-item:hover{background:#fdf5fc}
+.obra-item-title{font-size:12px;font-weight:700;color:#4a1942;margin-bottom:1px}
+.obra-item-sub{font-size:11px;color:#666;margin-bottom:3px}
+.obra-item-badges{display:flex;gap:4px;flex-wrap:wrap}
+.badge{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600}
+
+/* MODALS */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;max-width:96vw;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
+#modal-obra{width:520px}
+#modal-pins{width:700px}
+#modal-confirm{width:380px}
+.modal-hdr{padding:13px 16px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10;flex-shrink:0}
+.modal-hdr h2{font-size:15px;font-weight:700;color:#4a1942}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;line-height:1}
+.modal-body{padding:16px;display:flex;flex-direction:column;gap:11px;overflow-y:auto}
+.modal-ftr{padding:12px 16px;border-top:1px solid #eee;display:flex;gap:8px;justify-content:flex-end;align-items:center;position:sticky;bottom:0;background:#fff;flex-shrink:0}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:10px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.5px}
+.fg input,.fg select{border:1.5px solid #ddd;border-radius:6px;padding:7px 10px;font-size:13px;outline:none;color:#333;font-family:inherit}
+.fg input:focus,.fg select:focus{border-color:#4a1942}
+.hint{font-size:10px;color:#aaa;margin-top:2px}
+.sec{font-size:11px;font-weight:700;color:#4a1942;text-transform:uppercase;letter-spacing:.5px;border-bottom:1.5px solid #eee;padding-bottom:4px;margin-top:4px}
+.inv-display{background:#f9f5f9;border:1.5px solid #e0d0de;border-radius:6px;padding:7px 10px;font-size:13px;color:#4a1942;font-weight:700;min-height:34px}
+.geo-badge{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600;display:none}
+.geo-badge.loading{display:block;background:#E3F2FD;color:#0D47A1}
+.geo-badge.ok{display:block;background:#E8F5E9;color:#1B5E20}
+.geo-badge.err{display:block;background:#FFEBEE;color:#B71C1C}
+.img-drop{border:2px dashed #d0bece;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#fdf8fd;transition:all .2s}
+.img-drop:hover,.img-drop.over{border-color:#7b2d72;background:#f5edf4}
+.img-drop p{font-size:11px;color:#888;margin-top:4px}
+.img-drop strong{font-size:12px;color:#4a1942}
+.img-prev-wrap{position:relative;display:none}
+.img-prev{width:100%;height:130px;object-fit:cover;border-radius:8px;display:block}
+.img-remove{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:13px;cursor:pointer;line-height:22px;text-align:center}
+.img-err{font-size:11px;color:#c62828;margin-top:3px;display:none}
+#vial-fields{display:none;flex-direction:column;gap:11px}
+#vial-fields.show{display:flex}
+.trace-box{background:#E8F5E9;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.btn-sec{background:#fff;border:1.5px solid #ccc;padding:7px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;color:#333}
+.btn-pri{background:#4a1942;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600}
+.btn-del{background:#c62828;color:#fff;border:none;padding:7px 13px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600;margin-right:auto}
+.btn-green{background:#2E7D32;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
+.btn-orange{background:#E65100;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
+.btn-warn{background:#F57F17;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600}
+/* PIN EDITOR */
+#pins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:12px}
+.pin-card{border:2px solid #eee;border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.pin-card:hover{border-color:#7b2d72;background:#fdf5fc}
+.pin-card-preview{width:44px;height:56px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center}
+.pin-card-name{font-size:10px;font-weight:700;color:#333;line-height:1.3}
+.pin-card-del{position:absolute;top:4px;right:4px;background:rgba(198,40,40,.15);border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;color:#c62828;line-height:18px;display:none}
+.pin-card:hover .pin-card-del{display:block}
+.pin-add-card{border:2px dashed #ccc;border-radius:10px;padding:10px;text-align:center;cursor:pointer;color:#aaa;font-size:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90px;gap:4px}
+.pin-add-card:hover{border-color:#7b2d72;color:#7b2d72;background:#fdf5fc}
+#pin-edit-form{background:#f8f5fb;border-radius:10px;padding:14px;display:none;flex-direction:column;gap:12px;border:1.5px solid #e0d0de}
+#pin-edit-form.open{display:flex}
+.color-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.color-swatch{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15s;flex-shrink:0}
+.color-swatch.active{border-color:#222;transform:scale(1.2)}
+.icon-drop{border:2px dashed #ccc;border-radius:8px;padding:10px;text-align:center;cursor:pointer;background:#fff;font-size:11px;color:#888;transition:all .2s}
+.icon-drop:hover{border-color:#4a1942;color:#4a1942}
+/* POPUP CARD */
+.leaflet-popup-content-wrapper{border-radius:14px!important;padding:0!important;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.25)!important}
+.leaflet-popup-content{margin:0!important;width:268px!important;min-width:268px!important}
+.leaflet-popup-tip-container{display:none}
+.obra-card{width:268px;background:#f2f0ed;border-radius:14px;overflow:hidden;font-family:system-ui,sans-serif}
+.c-hdr{padding:8px 12px;display:flex;align-items:center;gap:8px}
+.c-hdr-num{color:#fff;font-size:14px;font-weight:800;letter-spacing:.5px}
+.c-img{width:100%;height:130px;object-fit:cover;display:block}
+.c-img-ph{width:100%;height:90px;background:#c8b8c4;display:flex;align-items:center;justify-content:center;font-size:30px}
+.c-body{padding:9px 12px 5px}
+.c-name{font-size:13px;font-weight:800;color:#5a1f52;text-transform:uppercase;line-height:1.2;margin-bottom:2px}
+.c-col{font-size:12px;font-weight:700;color:#222;margin-bottom:1px}
+.c-zona{font-size:11px;color:#888;margin-bottom:6px}
+.c-pills{padding:0 12px 7px;display:flex;gap:4px;flex-wrap:wrap}
+.c-pill{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700}
+.c-hr{border:none;border-top:1px solid #d8d4d2;margin:0 12px 7px}
+.c-meta{padding:0 12px 9px;display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.c-meta-item{display:flex;align-items:flex-start;gap:4px}
+.c-meta-ico{font-size:14px;flex-shrink:0;margin-top:1px}
+.c-meta-lbl{font-size:9px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.c-meta-val{font-size:11px;font-weight:700;color:#333;line-height:1.3}
+.c-actions{display:flex;border-top:1px solid #d8d4d2}
+.c-btn{flex:1;padding:8px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:transparent}
+.c-btn-edit{color:#2E7D32;border-right:1px solid #d8d4d2}.c-btn-edit:hover{background:#E8F5E9}
+.c-btn-del{color:#B71C1C}.c-btn-del:hover{background:#FFEBEE}
+.empty{padding:40px 16px;text-align:center;color:#aaa;font-size:13px}
+.obra-label{background:transparent;border:none;box-shadow:none}
+.obra-label-inner{background:rgba(255,255,255,.92);border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+/* SAVING INDICATOR */
+#saving{position:fixed;top:52px;right:12px;background:#1B5E20;color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;z-index:5000;display:none}
+#confirm-modal-body{align-items:center;text-align:center;padding:24px;display:flex;flex-direction:column;gap:8px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <img src="https://www.svgrepo.com/show/499956/fire.svg" alt=""/>
+    <h1>Obras Públicas Puebla</h1>
+    <p>Plataforma de transparencia ciudadana<br>Gobierno Municipal de Puebla</p>
+    <button class="btn-google" id="btn-google-login">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z"/></svg>
+      Continuar como visualizador
+    </button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-note">Los editores autorizados tendrán acceso completo.<br>El resto solo puede visualizar el mapa.</div>
+  </div>
+</div>
+
+<div id="saving">💾 Guardando…</div>
+<div id="mode-badge" class="viewer">👁 Solo visualización</div>
+
+<div id="header">
+  <div><h1>Mapa de Obras Públicas</h1><p>Transparencia ciudadana — Gobierno Municipal de Puebla</p></div>
+  <div id="header-btns">
+    <div id="user-info" style="display:none">
+      <img id="user-avatar" src="" alt=""/>
+      <span id="user-name"></span>
+    </div>
+    <button class="hbtn hbtn-blue" id="btn-pins" style="display:none">⬡ Categorías</button>
+    <button class="hbtn hbtn-purple" id="btn-add" style="display:none">+ Nueva obra</button>
+    <button class="hbtn hbtn-red" id="btn-logout" style="display:none">Salir</button>
+    <button class="hbtn" id="btn-login-header" style="background:#2E7D32">🔐 Acceso editor</button>
+  </div>
+</div>
+<div id="map-mode-bar"></div>
+<div id="controls">
+  <input id="search" type="text" placeholder="Buscar obra o colonia..."/>
+  <button class="filter-btn active" data-status="todas">Todas</button>
+  <button class="filter-btn" data-status="proyectada">Proyectadas</button>
+  <button class="filter-btn" data-status="proceso">En proceso</button>
+  <button class="filter-btn" data-status="terminada">Terminadas</button>
+</div>
+<div id="main">
+  <div id="map"></div>
+  <div id="panel">
+    <div id="panel-header">Obras <span id="count" style="color:#aaa;font-weight:400"></span></div>
+    <div id="obra-list"></div>
+  </div>
+</div>
+
+<!-- OBRA MODAL -->
+<div class="overlay" id="overlay-obra">
+<div class="modal" id="modal-obra">
+  <div class="modal-hdr"><h2 id="modal-title">Nueva Obra</h2><button class="modal-close" id="obra-close">&times;</button></div>
+  <div class="modal-body">
+    <div class="sec">Datos generales</div>
+    <div class="fg"><label>Nombre de la obra</label><input id="f-nombre" type="text" placeholder="Ej: Boulevard Apulco"/></div>
+    <div class="sec">Ubicación del pin</div>
+    <div class="fg">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="f-lat" type="number" step="any" placeholder="Latitud" style="flex:1"/>
+        <input id="f-lng" type="number" step="any" placeholder="Longitud" style="flex:1"/>
+        <button class="btn-sec" id="btn-pick" style="font-size:11px;padding:7px 10px;white-space:nowrap">📍 Clic en mapa</button>
+      </div>
+      <span class="hint">Coloca el pin primero — detecta colonia y junta automáticamente.</span>
+    </div>
+    <div id="geo-status" class="geo-badge"></div>
+    <div class="form-row">
+      <div class="fg"><label>Colonia / Barrio <span id="geo-col-ico"></span></label><input id="f-colonia" type="text" placeholder="Se detecta automáticamente"/></div>
+      <div class="fg"><label>Junta Auxiliar <span id="geo-jun-ico"></span></label>
+        <select id="f-junta">
+          <option value="">— Seleccionar —</option>
+          <option>Zona Metropolitana</option><option>Ignacio Romero Vargas</option>
+          <option>Ignacio Zaragoza</option><option>La Libertad</option>
+          <option>La Resurrección</option><option>San Andrés Azumiatla</option>
+          <option>San Baltazar Campeche</option><option>San Baltazar Tetela</option>
+          <option>San Felipe Hueyotlipan</option><option>San Francisco Totimehuacán</option>
+          <option>San Jerónimo Caleras</option><option>San Miguel Canoa</option>
+          <option>San Pablo Xochimehuacán</option><option>San Pedro Zacachimalpa</option>
+          <option>Santa María Guadalupe Tecola</option><option>Santa María Xonacatepec</option>
+          <option>Santo Tomás Chautla</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>No. Contrato</label><input id="f-contrato" type="text"/></div>
+      <div class="fg"><label>Tipo / Categoría</label><select id="f-tipo"></select></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Estatus</label>
+        <select id="f-status">
+          <option value="proyectada">Proyectada</option>
+          <option value="proceso">En proceso</option>
+          <option value="terminada">Terminada</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Fecha de inicio</label><input id="f-inicio" type="date"/></div>
+      <div class="fg"><label>Fecha de término</label><input id="f-termino" type="date"/></div>
+    </div>
+    <div class="sec">Inversión</div>
+    <div class="fg"><label>Monto total (pesos)</label><input id="f-inversion" type="number" step="1" placeholder="Ej: 20600000"/><span class="hint">Monto completo en pesos mexicanos.</span></div>
+    <div class="fg"><label>Vista previa</label><div class="inv-display" id="inv-preview">—</div></div>
+    <div class="sec">Imagen de la obra</div>
+    <div class="img-drop" id="img-drop">
+      <div style="font-size:26px">📷</div><strong>Clic o arrastra imagen aquí</strong>
+      <p>JPG o PNG · Máx 2 MB · Recomendado 1200×800 px</p>
+      <input id="f-img-file" type="file" accept="image/jpeg,image/png" style="display:none"/>
+    </div>
+    <div class="img-prev-wrap" id="img-prev-wrap"><img class="img-prev" id="img-prev"/><button class="img-remove" id="img-remove">&times;</button></div>
+    <div class="img-err" id="img-err"></div>
+    <div id="vial-fields">
+      <div class="sec">Datos viales</div>
+      <div class="form-row">
+        <div class="fg"><label>Longitud (m)</label><input id="f-longitud" type="number" step="1" placeholder="850"/></div>
+        <div class="fg"><label>Área de intervención (m²)</label><input id="f-area" type="number" step="1" placeholder="4250"/></div>
+      </div>
+      <div class="trace-box">
+        <div style="font-size:12px;font-weight:700;color:#1B5E20">📍 Tramo sobre el mapa</div>
+        <div id="trace-info" style="font-size:11px;color:#888">Sin tramo trazado.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-green" id="btn-open-trace">✏️ Trazar</button>
+          <button class="btn-sec" id="btn-clear-trace" style="font-size:12px;padding:6px 10px">🗑 Borrar</button>
+        </div>
+        <div style="font-size:10px;color:#666">Clic punto a punto. "Finalizar" o doble clic para terminar.</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-ftr">
+    <button class="btn-del" id="btn-delete" style="display:none">🗑 Eliminar</button>
+    <button class="btn-sec" id="btn-cancel">Cancelar</button>
+    <button class="btn-pri" id="btn-save">Guardar obra</button>
+  </div>
+</div>
+</div>
+
+<!-- CONFIRM CANCEL -->
+<div class="overlay" id="overlay-confirm">
+<div class="modal" id="modal-confirm" style="width:360px">
+  <div id="confirm-modal-body" class="modal-body" style="align-items:center;text-align:center">
+    <span style="font-size:36px">⚠️</span>
+    <p style="font-size:14px;color:#333;line-height:1.6"><strong>¿Descartar cambios?</strong><br>Los datos ingresados se perderán.</p>
+  </div>
+  <div class="modal-ftr" style="justify-content:center;gap:12px">
+    <button class="btn-sec" id="confirm-no">Seguir editando</button>
+    <button class="btn-warn" id="confirm-yes">Sí, descartar</button>
+  </div>
+</div>
+</div>
+
+<!-- PIN EDITOR -->
+<div class="overlay" id="overlay-pins">
+<div class="modal" id="modal-pins">
+  <div class="modal-hdr"><h2>Editor de Categorías de Pin</h2><button class="modal-close" id="pins-close">&times;</button></div>
+  <div class="modal-body" id="pins-modal-body">
+    <div style="font-size:12px;color:#666">Haz clic en una categoría para editarla.</div>
+    <div id="pins-grid"></div>
+    <div id="pin-edit-form">
+      <div style="font-size:13px;font-weight:700;color:#4a1942" id="pin-edit-title">—</div>
+      <div class="fg"><label>Nombre</label><input id="pin-name" type="text"/></div>
+      <div class="fg">
+        <label>Color del pin</label>
+        <div class="color-row" id="color-swatches"></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <input type="color" id="pin-color-input" style="width:36px;height:36px;border:none;border-radius:50%;cursor:pointer;padding:0"/>
+          <span style="font-size:11px;color:#666">Color personalizado</span>
+          <span id="pin-color-hex" style="font-size:12px;font-weight:700;color:#333;margin-left:4px"></span>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Ícono (SVG o PNG · Máx 50 KB · 64×64 px)</label>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div class="icon-drop" id="icon-drop" style="flex:1">Clic o arrastra ícono SVG/PNG<br><span style="font-size:10px">Fondo transparente</span><input id="icon-file" type="file" accept="image/svg+xml,image/png" style="display:none"/></div>
+          <div id="icon-preview-wrap" style="display:none;flex-direction:column;align-items:center;gap:4px">
+            <img id="pin-icon-preview" style="width:48px;height:48px;object-fit:contain;border-radius:6px;background:#eee"/>
+            <button class="btn-sec" id="icon-remove" style="font-size:10px;padding:3px 8px">Quitar</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Vista previa</label>
+        <div style="display:flex;align-items:flex-end;gap:16px">
+          <div><div style="font-size:9px;color:#888;text-align:center;margin-bottom:2px">Proyectada</div><div id="pin-prev-proy"></div></div>
+          <div><div style="font-size:9px;color:#888;text-align:center;margin-bottom:2px">En proceso ⚙</div><div id="pin-prev-proc"></div></div>
+          <div><div style="font-size:9px;color:#888;text-align:center;margin-bottom:2px">Terminada ✓</div><div id="pin-prev-term"></div></div>
+        </div>
+      </div>
+      <div class="fg">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;text-transform:none;letter-spacing:0">
+          <input type="checkbox" id="pin-vial" style="width:15px;height:15px"/>
+          <span style="font-size:12px;font-weight:600;color:#333">Categoría vial (longitud, área y tramo)</span>
+        </label>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn-sec" id="pin-edit-cancel">Cancelar</button>
+        <button class="btn-pri" id="pin-edit-save">Guardar categoría</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-ftr">
+    <button class="btn-pri" id="pin-add-new" style="background:#1a5276">+ Nueva categoría</button>
+    <button class="btn-sec" id="pins-done">Cerrar</button>
+  </div>
+</div>
+</div>
+
+<!-- FIREBASE + APP -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ── CONFIG ──
+const firebaseConfig = {
+  apiKey: "AIzaSyA7Pk8IwoR45PmUUvIHWxb6cpU9rSh1Sgs",
+  authDomain: "obras-publicas-puebla.firebaseapp.com",
+  projectId: "obras-publicas-puebla",
+  storageBucket: "obras-publicas-puebla.firebasestorage.app",
+  messagingSenderId: "1040966007077",
+  appId: "1:1040966007077:web:956b2ee0cde6aa63c202cc"
+};
+const fbApp = initializeApp(firebaseConfig);
+const auth  = getAuth(fbApp);
+const db    = getFirestore(fbApp);
+
+// ── STATE ──
+const ICON_GEAR  = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94zM12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>');
+const ICON_CHECK = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+const PRESET_COLORS = ['#E65100','#4527A0','#0D47A1','#006064','#1B5E20','#B71C1C','#37474F','#1565C0','#880E4F','#F57F17','#4E342E','#546E7A','#4a1942','#00695C'];
+const ST_COL = {proyectada:'#E67E22', proceso:'#1565C0', terminada:'#2E7D32'};
+const ST_LBL = {proyectada:'Proyectada', proceso:'En proceso', terminada:'Terminada'};
+const DEFAULT_CATS = [
+  {id:'c1',name:'Pavimentación',color:'#E65100',icon:'',vial:true},
+  {id:'c2',name:'Rehabilitación Vial',color:'#4527A0',icon:'',vial:true},
+  {id:'c3',name:'Mantenimiento Vial',color:'#0D47A1',icon:'',vial:true},
+  {id:'c4',name:'Hidrosanitarias',color:'#006064',icon:'',vial:false},
+  {id:'c5',name:'Educativas',color:'#1B5E20',icon:'',vial:false},
+  {id:'c6',name:'Parques/Espacios',color:'#2E7D32',icon:'',vial:false},
+  {id:'c7',name:'Bacheo Frío',color:'#37474F',icon:'',vial:true},
+  {id:'c8',name:'Movilidad',color:'#1565C0',icon:'',vial:false},
+  {id:'c9',name:'DIF Municipal',color:'#880E4F',icon:'',vial:false},
+  {id:'c10',name:'Electrificación',color:'#F57F17',icon:'',vial:false},
+  {id:'c11',name:'Edificación',color:'#4E342E',icon:'',vial:false},
+  {id:'c12',name:'Otras Obras',color:'#546E7A',icon:'',vial:false}
+];
+
+let cats=[], obras=[], markers={}, polylines={}, labelMarkers={};
+let editId=null, isEditor=false, currentUser=null;
+let pickMode=false, traceMode=false, tmpMk=null;
+let currentTramo=[], pendingTrace=[], livePolyline=null, traceMarkers=[];
+let filt='todas', q='', currentImgBase64='', formDirty=false;
+let editingCatId=null, currentPinColor='#E65100', currentPinIcon='';
+let map;
+
+// ── HELPERS ──
+const fmt = d => { if(!d) return '--'; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y.slice(2)}`; };
+const fmtMdp = v => { const n=parseFloat(v); return (!n||isNaN(n))? '--' : (n/1e6).toFixed(2)+' MDP'; };
+const fmtInvFull = v => { const n=parseFloat(v); if(!n||isNaN(n)) return '—'; return n.toLocaleString('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0})+' &nbsp;·&nbsp; '+(n/1e6).toFixed(2)+' MDP'; };
+const getCat = id => cats.find(c=>c.id===id) || {id:'',color:'#888',icon:'',name:'—',vial:false};
+const showSaving = () => { const s=document.getElementById('saving'); s.style.display='block'; setTimeout(()=>s.style.display='none',1800); };
+
+// ── PIN SVG ──
+function pinSvg(color, catIcon, statusIcon, size=38){
+  const h=Math.round(size*1.26), cx=size/2, cy=size/2;
+  const bodyR=size*0.32, innerR=size*0.20;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${h}" viewBox="0 0 ${size} ${h}">
+    <path d="M${cx} 0C${size*.22} 0 0 ${size*.22} 0 ${cy}c0 ${size*.36} ${cx} ${h*0.6} ${cx} ${h*0.6}S${size} ${cy+size*.36} ${size} ${cy}C${size} ${size*.22} ${size*.78} 0 ${cx} 0z" fill="${color}"/>
+    <circle cx="${cx}" cy="${cy}" r="${bodyR}" fill="white" opacity="0.92"/>`;
+  if(catIcon){ const r=innerR*.9; svg+=`<image href="${catIcon}" x="${cx-r}" y="${cy-r}" width="${r*2}" height="${r*2}"/>`; }
+  else svg+=`<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="${color}"/>`;
+  if(statusIcon){ const bx=cx+bodyR*.6,by=cy+bodyR*.6,br=bodyR*.42;
+    svg+=`<circle cx="${bx}" cy="${by}" r="${br}" fill="${color}"/><image href="${statusIcon}" x="${bx-br*.85}" y="${by-br*.85}" width="${br*1.7}" height="${br*1.7}"/>`; }
+  return svg+'</svg>';
+}
+const statusIcon = s => s==='proceso'?ICON_GEAR : s==='terminada'?ICON_CHECK : null;
+const mkLeafletIcon = (status,catId) => {
+  const cat=getCat(catId);
+  return L.divIcon({html:pinSvg(cat.color,cat.icon||'',statusIcon(status),38),className:'',iconSize:[38,48],iconAnchor:[19,48],popupAnchor:[0,-50]});
+};
+
+// ── FIRESTORE ──
+async function savingShow(fn){ showSaving(); await fn(); }
+
+async function loadCats(){
+  const snap = await getDocs(collection(db,'categorias'));
+  if(snap.empty){
+    // seed defaults
+    for(const c of DEFAULT_CATS) await setDoc(doc(db,'categorias',c.id),c);
+    cats=[...DEFAULT_CATS];
+  } else {
+    cats=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }
+  buildTipoSelect();
+}
+
+function subscribeObras(){
+  onSnapshot(collection(db,'obras'), snap=>{
+    obras=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderAll();
+  });
+}
+
+async function saveObra(o){
+  await savingShow(async()=>{ await setDoc(doc(db,'obras',o.id),o); });
+}
+async function deleteObraFS(id){
+  await savingShow(async()=>{ await deleteDoc(doc(db,'obras',id)); });
+}
+async function saveCatFS(c){
+  await savingShow(async()=>{ await setDoc(doc(db,'categorias',c.id),c); });
+}
+async function deleteCatFS(id){
+  await savingShow(async()=>{ await deleteDoc(doc(db,'categorias',id)); });
+}
+async function checkEditor(uid){
+  try{ const d=await getDoc(doc(db,'editores',uid)); return d.exists()&&d.data().activo===true; }
+  catch{ return false; }
+}
+
+// ── AUTH ──
+const provider = new GoogleAuthProvider();
+
+async function loginWithGoogle(){
+  try{
+    const result = await signInWithPopup(auth, provider);
+    return result.user;
+  } catch(e){
+    document.getElementById('login-error').textContent='Error al iniciar sesión. Intenta de nuevo.';
+    document.getElementById('login-error').style.display='block';
+  }
+}
+
+onAuthStateChanged(auth, async user=>{
+  if(user){
+    currentUser=user;
+    const editorOk = await checkEditor(user.uid);
+    isEditor=editorOk;
+    document.getElementById('login-screen').classList.add('hidden');
+    // header
+    document.getElementById('user-info').style.display='flex';
+    document.getElementById('user-avatar').src=user.photoURL||'';
+    document.getElementById('user-name').textContent=user.displayName?.split(' ')[0]||'';
+    document.getElementById('btn-logout').style.display='';
+    document.getElementById('btn-login-header').style.display='none';
+    if(isEditor){
+      document.getElementById('btn-pins').style.display='';
+      document.getElementById('btn-add').style.display='';
+      document.getElementById('mode-badge').textContent='✏️ Modo editor';
+      document.getElementById('mode-badge').className='editor';
+    } else {
+      document.getElementById('mode-badge').textContent='👁 Solo visualización';
+      document.getElementById('mode-badge').className='viewer';
+    }
+    await loadCats();
+    subscribeObras();
+  } else {
+    // anonymous viewer — still load data
+    currentUser=null; isEditor=false;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('btn-login-header').style.display='';
+    document.getElementById('user-info').style.display='none';
+    document.getElementById('btn-logout').style.display='none';
+    document.getElementById('btn-pins').style.display='none';
+    document.getElementById('btn-add').style.display='none';
+    document.getElementById('mode-badge').textContent='👁 Solo visualización';
+    document.getElementById('mode-badge').className='viewer';
+    await loadCats();
+    subscribeObras();
+  }
+});
+
+document.getElementById('btn-google-login').onclick = loginWithGoogle;
+document.getElementById('btn-login-header').onclick = loginWithGoogle;
+document.getElementById('btn-logout').onclick = ()=>signOut(auth);
+
+// ── TIPO SELECT ──
+function buildTipoSelect(){
+  const sel=document.getElementById('f-tipo');
+  const prev=sel.value; sel.innerHTML='';
+  cats.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=c.name; sel.appendChild(o); });
+  if(prev) sel.value=prev;
+}
+
+// ── GEO ──
+let geoTimer=null;
+function geoDetect(lat,lng){
+  const st=document.getElementById('geo-status');
+  st.textContent='🔍 Detectando colonia y junta auxiliar…'; st.className='geo-badge loading';
+  clearTimeout(geoTimer);
+  geoTimer=setTimeout(()=>{
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=es`,
+      {headers:{'User-Agent':'ObrasPublicasPuebla/1.0'}})
+      .then(r=>r.json()).then(data=>{
+        const a=data.address||{};
+        const col=a.neighbourhood||a.suburb||a.quarter||a.residential||a.village||'';
+        if(col&&!document.getElementById('f-colonia').value){
+          document.getElementById('f-colonia').value=col;
+          document.getElementById('geo-col-ico').textContent='📍';
+        }
+        const match=matchJunta(a);
+        if(match){ document.getElementById('f-junta').value=match; document.getElementById('geo-jun-ico').textContent='📍'; }
+        st.textContent='✅ Ubicación detectada'; st.className='geo-badge ok';
+        setTimeout(()=>{st.className='geo-badge';},3000);
+      }).catch(()=>{
+        st.textContent='⚠ No se pudo detectar'; st.className='geo-badge err';
+        setTimeout(()=>{st.className='geo-badge';},3000);
+      });
+  },600);
+}
+function matchJunta(a){
+  const JUNTAS=['Zona Metropolitana','Ignacio Romero Vargas','Ignacio Zaragoza','La Libertad','La Resurrección','San Andrés Azumiatla','San Baltazar Campeche','San Baltazar Tetela','San Felipe Hueyotlipan','San Francisco Totimehuacán','San Jerónimo Caleras','San Miguel Canoa','San Pablo Xochimehuacán','San Pedro Zacachimalpa','Santa María Guadalupe Tecola','Santa María Xonacatepec','Santo Tomás Chautla'];
+  const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const all=norm(Object.values(a).join(' '));
+  for(const j of JUNTAS){
+    const keys=norm(j).split(' ').filter(w=>w.length>3);
+    if(keys.length&&keys.every(w=>all.includes(w))) return j;
+  }
+  return '';
+}
+
+// ── CARD ──
+function buildCard(o){
+  const cat=getCat(o.catId);
+  const sc=ST_COL[o.status]||'#888', sl=ST_LBL[o.status]||o.status;
+  const imgH=o.img?`<img class="c-img" src="${o.img}" onerror="this.style.display='none'"/>`
+                  :`<div class="c-img-ph">🏗️</div>`;
+  const vialMeta=cat.vial?`
+    <div class="c-meta-item"><span class="c-meta-ico">📏</span><div>
+      <div class="c-meta-lbl">Longitud</div>
+      <div class="c-meta-val">${o.longitud?Number(o.longitud).toLocaleString()+' m':'--'}</div></div></div>
+    <div class="c-meta-item"><span class="c-meta-ico">⬛</span><div>
+      <div class="c-meta-lbl">Área</div>
+      <div class="c-meta-val">${o.area?Number(o.area).toLocaleString()+' m²':'--'}</div></div></div>`:'';
+  const editorBtns=isEditor?`
+    <div class="c-actions">
+      <button class="c-btn c-btn-edit" data-oid="${o.id}">✏️ Editar</button>
+      <button class="c-btn c-btn-del" data-oid="${o.id}">🗑 Eliminar</button>
+    </div>`:'';
+  return `<div class="obra-card">
+    <div class="c-hdr" style="background:${cat.color}">${pinSvg(cat.color,cat.icon||'',statusIcon(o.status),22)}
+      <span class="c-hdr-num">${o.contrato||'—'}</span></div>
+    ${imgH}
+    <div class="c-body">
+      <div class="c-name">${(o.nombre||'').toUpperCase()}</div>
+      <div class="c-col">${o.colonia||''}</div>
+      <div class="c-zona">${o.junta||''}</div>
+    </div>
+    <div class="c-pills">
+      <span class="c-pill" style="background:${sc}22;color:${sc}">${sl}</span>
+      <span class="c-pill" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span>
+    </div>
+    <hr class="c-hr"/>
+    <div class="c-meta">
+      <div class="c-meta-item"><span class="c-meta-ico">📅</span><div>
+        <div class="c-meta-lbl">Plazo</div>
+        <div class="c-meta-val">${fmt(o.inicio)} — ${fmt(o.termino)}</div></div></div>
+      <div class="c-meta-item"><span class="c-meta-ico">💰</span><div>
+        <div class="c-meta-lbl">Inversión</div>
+        <div class="c-meta-val">${fmtMdp(o.inversion)}</div></div></div>
+      ${vialMeta}
+    </div>
+    ${editorBtns}
+  </div>`;
+}
+
+// ── MAP RENDER ──
+const filtered = ()=>obras.filter(o=>{
+  const ms=filt==='todas'||o.status===filt;
+  const mq=!q||(o.nombre+o.colonia+o.junta+o.contrato).toLowerCase().includes(q);
+  return ms&&mq;
+});
+
+function clearLayers(){
+  Object.values(markers).forEach(m=>{ try{map.removeLayer(m);}catch{} });
+  Object.values(polylines).forEach(p=>{ try{map.removeLayer(p);}catch{} });
+  Object.values(labelMarkers).forEach(l=>{ try{map.removeLayer(l);}catch{} });
+  markers={}; polylines={}; labelMarkers={};
+}
+
+function renderMarkers(){
+  clearLayers();
+  filtered().forEach(o=>{
+    const cat=getCat(o.catId);
+    if(o.tramo&&o.tramo.length>=2){
+      const pl=L.polyline(o.tramo,{color:cat.color,weight:6,opacity:.85,lineJoin:'round',lineCap:'round'}).addTo(map);
+      if(o.status==='proyectada') pl.setStyle({dashArray:'10 6'});
+      pl.bindPopup(L.popup({maxWidth:280,minWidth:268}).setContent(buildCard(o)));
+      pl.on('popupopen',()=>attachPopupEvents(o.id));
+      polylines[o.id]=pl;
+      const mid=o.tramo[Math.floor(o.tramo.length/2)];
+      labelMarkers[o.id]=L.marker(mid,{icon:L.divIcon({
+        html:`<div class="obra-label-inner" style="color:${cat.color}">${o.contrato||o.nombre}</div>`,
+        className:'obra-label',iconAnchor:[0,8]}),interactive:false,zIndexOffset:-100}).addTo(map);
+    }
+    if(o.lat&&o.lng){
+      const m=L.marker([o.lat,o.lng],{icon:mkLeafletIcon(o.status,o.catId)}).addTo(map);
+      m.bindPopup(L.popup({maxWidth:280,minWidth:268}).setContent(buildCard(o)));
+      m.on('popupopen',()=>attachPopupEvents(o.id));
+      markers[o.id]=m;
+    }
+  });
+}
+
+function attachPopupEvents(oid){
+  setTimeout(()=>{
+    document.querySelectorAll(`.c-btn-edit[data-oid="${oid}"]`).forEach(b=>b.onclick=()=>{map.closePopup();setTimeout(()=>openModal(oid),80);});
+    document.querySelectorAll(`.c-btn-del[data-oid="${oid}"]`).forEach(b=>b.onclick=()=>doDeleteObra(oid));
+  },120);
+}
+
+async function doDeleteObra(id){
+  if(!confirm('¿Eliminar esta obra permanentemente?')) return;
+  await deleteObraFS(id);
+  map.closePopup();
+}
+
+function renderPanel(){
+  const arr=filtered();
+  document.getElementById('count').textContent=`(${arr.length})`;
+  document.getElementById('obra-list').innerHTML=arr.length?arr.map(o=>{
+    const cat=getCat(o.catId);
+    const sc=ST_COL[o.status]||'#888',sl=ST_LBL[o.status]||o.status;
+    return `<div class="obra-item" onclick="window.focusObra('${o.id}')">
+      <div class="obra-item-title">${o.nombre||''}</div>
+      <div class="obra-item-sub">${o.colonia||''} · ${o.junta||''}</div>
+      <div class="obra-item-badges">
+        <span class="badge" style="background:${sc}22;color:${sc}">${sl}</span>
+        <span class="badge" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span>
+      </div></div>`;
+  }).join(''):'<div class="empty">Sin resultados.</div>';
+}
+
+function renderAll(){ renderMarkers(); renderPanel(); }
+
+window.focusObra=id=>{
+  const o=obras.find(x=>x.id===id); if(!o) return;
+  if(o.tramo?.length>=2&&polylines[id]){
+    map.fitBounds(polylines[id].getBounds(),{padding:[40,40],maxZoom:17});
+    setTimeout(()=>{polylines[id].openPopup();attachPopupEvents(id);},400);
+  } else if(o.lat&&o.lng){
+    map.setView([o.lat,o.lng],16);
+    setTimeout(()=>{markers[id]?.openPopup();attachPopupEvents(id);},300);
+  }
+};
+
+document.querySelectorAll('.filter-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); filt=b.dataset.status; renderAll();
+  });
+});
+document.getElementById('search').addEventListener('input',e=>{q=e.target.value.toLowerCase();renderAll();});
+
+// ── OBRA MODAL ──
+document.getElementById('f-inversion').addEventListener('input',function(){
+  document.getElementById('inv-preview').innerHTML=fmtInvFull(this.value); formDirty=true;
+});
+document.getElementById('f-tipo').addEventListener('change',function(){
+  const cat=getCat(this.value);
+  document.getElementById('vial-fields').style.display=cat.vial?'flex':'none';
+  formDirty=true;
+});
+['f-nombre','f-colonia','f-contrato','f-inicio','f-termino','f-longitud','f-area'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('input',()=>formDirty=true);
+});
+['f-junta','f-status'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('change',()=>formDirty=true);
+});
+
+// image
+const imgDrop=document.getElementById('img-drop');
+const imgFile=document.getElementById('f-img-file');
+imgDrop.addEventListener('click',()=>imgFile.click());
+imgDrop.addEventListener('dragover',e=>{e.preventDefault();imgDrop.classList.add('over');});
+imgDrop.addEventListener('dragleave',()=>imgDrop.classList.remove('over'));
+imgDrop.addEventListener('drop',e=>{e.preventDefault();imgDrop.classList.remove('over');if(e.dataTransfer.files[0])processImg(e.dataTransfer.files[0]);});
+imgFile.addEventListener('change',()=>{if(imgFile.files[0])processImg(imgFile.files[0]);});
+document.getElementById('img-remove').addEventListener('click',clearImg);
+
+function processImg(file){
+  const err=document.getElementById('img-err'); err.style.display='none';
+  if(!['image/jpeg','image/png'].includes(file.type)){err.textContent='Solo JPG o PNG.';err.style.display='block';return;}
+  if(file.size>2*1024*1024){err.textContent='Máximo 2 MB.';err.style.display='block';return;}
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      if(img.width<800){err.textContent=`Ancho ${img.width}px — menor al mínimo recomendado (800px).`;err.style.display='block';}
+      currentImgBase64=e.target.result;
+      document.getElementById('img-prev').src=e.target.result;
+      document.getElementById('img-prev-wrap').style.display='block';
+      imgDrop.style.display='none'; formDirty=true;
+    };
+    img.src=e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+function clearImg(){
+  currentImgBase64=''; imgFile.value='';
+  document.getElementById('img-prev-wrap').style.display='none';
+  imgDrop.style.display='block';
+  document.getElementById('img-err').style.display='none';
+}
+
+function openModal(id){
+  if(!isEditor) return;
+  editId=id||null; formDirty=false;
+  const o=id?obras.find(x=>x.id===id):null;
+  currentTramo=o?.tramo?JSON.parse(JSON.stringify(o.tramo)):[];
+  currentImgBase64=o?.img||'';
+  document.getElementById('modal-title').textContent=id?'Editar Obra':'Nueva Obra';
+  document.getElementById('btn-delete').style.display=id?'':'none';
+  document.getElementById('f-nombre').value=o?.nombre||'';
+  document.getElementById('f-colonia').value=o?.colonia||'';
+  document.getElementById('geo-col-ico').textContent='';
+  document.getElementById('geo-jun-ico').textContent='';
+  document.getElementById('geo-status').className='geo-badge';
+  document.getElementById('f-junta').value=o?.junta||'';
+  document.getElementById('f-contrato').value=o?.contrato||'';
+  document.getElementById('f-inversion').value=o?.inversion||'';
+  document.getElementById('inv-preview').innerHTML=o?fmtInvFull(o.inversion):'—';
+  buildTipoSelect();
+  document.getElementById('f-tipo').value=o?.catId||(cats[0]?.id||'');
+  document.getElementById('f-status').value=o?.status||'proyectada';
+  document.getElementById('f-inicio').value=o?.inicio||'';
+  document.getElementById('f-termino').value=o?.termino||'';
+  document.getElementById('f-lat').value=o?.lat||'';
+  document.getElementById('f-lng').value=o?.lng||'';
+  document.getElementById('f-longitud').value=o?.longitud||'';
+  document.getElementById('f-area').value=o?.area||'';
+  const cat=getCat(document.getElementById('f-tipo').value);
+  document.getElementById('vial-fields').style.display=cat.vial?'flex':'none';
+  updateTraceInfo();
+  document.getElementById('img-err').style.display='none';
+  if(currentImgBase64){document.getElementById('img-prev').src=currentImgBase64;document.getElementById('img-prev-wrap').style.display='block';imgDrop.style.display='none';}
+  else clearImg();
+  document.getElementById('overlay-obra').classList.add('open');
+  document.getElementById('modal-obra').scrollTop=0;
+}
+
+function tryClose(){
+  if(formDirty) document.getElementById('overlay-confirm').classList.add('open');
+  else closeModal();
+}
+function closeModal(){
+  document.getElementById('overlay-obra').classList.remove('open');
+  document.getElementById('overlay-confirm').classList.remove('open');
+  editId=null; formDirty=false;
+  if(tmpMk){map.removeLayer(tmpMk);tmpMk=null;}
+  setPickMode(false);
+  if(traceMode) stopTrace(false);
+}
+
+document.getElementById('obra-close').onclick=tryClose;
+document.getElementById('btn-cancel').onclick=tryClose;
+document.getElementById('overlay-obra').onclick=e=>{if(e.target.id==='overlay-obra')tryClose();};
+document.getElementById('confirm-no').onclick=()=>document.getElementById('overlay-confirm').classList.remove('open');
+document.getElementById('confirm-yes').onclick=closeModal;
+document.getElementById('btn-add').onclick=()=>openModal();
+
+document.getElementById('btn-delete').onclick=async()=>{
+  if(!editId||!confirm('¿Eliminar esta obra permanentemente?')) return;
+  await deleteObraFS(editId);
+  formDirty=false; closeModal();
+};
+
+document.getElementById('btn-save').onclick=async()=>{
+  const nom=document.getElementById('f-nombre').value.trim();
+  if(!nom){alert('El nombre es requerido.');return;}
+  const lat=parseFloat(document.getElementById('f-lat').value);
+  const lng=parseFloat(document.getElementById('f-lng').value);
+  if(isNaN(lat)||isNaN(lng)){alert('Selecciona la ubicación del pin.');return;}
+  const catId=document.getElementById('f-tipo').value;
+  const cat=getCat(catId);
+  const o={
+    id:editId||String(Date.now()),
+    nombre:nom,
+    colonia:document.getElementById('f-colonia').value.trim(),
+    junta:document.getElementById('f-junta').value,
+    contrato:document.getElementById('f-contrato').value.trim(),
+    inversion:parseFloat(document.getElementById('f-inversion').value)||0,
+    inicio:document.getElementById('f-inicio').value,
+    termino:document.getElementById('f-termino').value,
+    catId, status:document.getElementById('f-status').value,
+    img:currentImgBase64, lat, lng,
+    longitud:cat.vial?parseFloat(document.getElementById('f-longitud').value)||null:null,
+    area:cat.vial?parseFloat(document.getElementById('f-area').value)||null:null,
+    tramo:cat.vial?currentTramo:[]
+  };
+  formDirty=false;
+  await saveObra(o);
+  closeModal();
+  setTimeout(()=>window.focusObra(o.id),400);
+};
+
+// ── PICK MODE ──
+function setPickMode(on){
+  pickMode=on;
+  const bar=document.getElementById('map-mode-bar');
+  if(on){ bar.innerHTML='📍 Haz clic en el mapa para colocar el pin. <button class="btn-sec" style="font-size:11px;padding:5px 10px;margin-left:8px" onclick="window.cancelPick()">✕ Cancelar</button>'; bar.className='pick'; }
+  else if(!traceMode){ bar.className=''; bar.innerHTML=''; }
+  map.getContainer().style.cursor=on?'crosshair':'';
+  if(!on&&tmpMk){ map.removeLayer(tmpMk); tmpMk=null; }
+}
+window.cancelPick=()=>{ setPickMode(false); document.getElementById('overlay-obra').classList.add('open'); };
+document.getElementById('btn-pick').onclick=()=>{ document.getElementById('overlay-obra').classList.remove('open'); setPickMode(true); };
+
+// ── TRACE MODE ──
+function updateTraceInfo(){
+  const info=document.getElementById('trace-info'); if(!info) return;
+  if(currentTramo.length>=2){ info.textContent=`✅ Tramo con ${currentTramo.length} puntos.`; info.style.color='#2E7D32'; }
+  else{ info.textContent='Sin tramo trazado.'; info.style.color='#888'; }
+}
+function updateTraceBar(){
+  const n=pendingTrace.length;
+  document.getElementById('map-mode-bar').innerHTML=
+    `<span>✏️ <b>${n} punto${n!==1?'s':''}</b> — Clic para continuar</span>
+    <button class="btn-green" id="td-fin" style="margin-left:8px">✔ Finalizar</button>
+    <button class="btn-orange" id="td-und" style="margin-left:4px">↩ Deshacer</button>
+    <button class="btn-sec" id="td-can" style="margin-left:4px;font-size:11px;padding:5px 10px">✕ Cancelar</button>`;
+  document.getElementById('td-fin').onclick=()=>stopTrace(true);
+  document.getElementById('td-und').onclick=undoTrace;
+  document.getElementById('td-can').onclick=()=>stopTrace(false);
+}
+function undoTrace(){
+  if(!pendingTrace.length) return;
+  pendingTrace.pop();
+  const last=traceMarkers.pop(); if(last) map.removeLayer(last);
+  if(livePolyline){ map.removeLayer(livePolyline); livePolyline=null; }
+  if(pendingTrace.length>=2) livePolyline=L.polyline(pendingTrace,{color:'#2E7D32',weight:5,dashArray:'8 4'}).addTo(map);
+  updateTraceBar();
+}
+function startTrace(){
+  traceMode=true; pendingTrace=JSON.parse(JSON.stringify(currentTramo));
+  document.getElementById('overlay-obra').classList.remove('open');
+  const bar=document.getElementById('map-mode-bar'); bar.className='trace';
+  map.getContainer().style.cursor='crosshair'; map.doubleClickZoom.disable();
+  if(pendingTrace.length>=2) livePolyline=L.polyline(pendingTrace,{color:'#2E7D32',weight:5,dashArray:'8 4'}).addTo(map);
+  pendingTrace.forEach(pt=>traceMarkers.push(L.circleMarker(pt,{radius:5,color:'#fff',fillColor:'#2E7D32',fillOpacity:1,weight:2}).addTo(map)));
+  updateTraceBar();
+}
+function stopTrace(keep){
+  traceMode=false;
+  const bar=document.getElementById('map-mode-bar'); bar.className=''; bar.innerHTML='';
+  map.getContainer().style.cursor=''; map.doubleClickZoom.enable();
+  if(livePolyline){ map.removeLayer(livePolyline); livePolyline=null; }
+  traceMarkers.forEach(m=>map.removeLayer(m)); traceMarkers=[];
+  if(keep&&pendingTrace.length>=2){ currentTramo=JSON.parse(JSON.stringify(pendingTrace)); formDirty=true; }
+  pendingTrace=[]; updateTraceInfo();
+  document.getElementById('overlay-obra').classList.add('open');
+}
+document.getElementById('btn-open-trace').onclick=startTrace;
+document.getElementById('btn-clear-trace').onclick=()=>{ currentTramo=[]; formDirty=true; updateTraceInfo(); };
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(traceMode) stopTrace(false);
+    else if(pickMode){ setPickMode(false); document.getElementById('overlay-obra').classList.add('open'); }
+  }
+});
+
+// ── PIN EDITOR ──
+function renderPinsGrid(){
+  const grid=document.getElementById('pins-grid'); grid.innerHTML='';
+  cats.forEach(c=>{
+    const div=document.createElement('div'); div.className='pin-card';
+    div.innerHTML=`<div class="pin-card-preview">${pinSvg(c.color,c.icon||'',null,44)}</div>
+      <div class="pin-card-name">${c.name}${c.vial?' <span style="font-size:9px;color:#1565C0">(vial)</span>':''}</div>
+      <button class="pin-card-del" data-cid="${c.id}">&times;</button>`;
+    div.onclick=e=>{ if(e.target.classList.contains('pin-card-del')) return; openPinEdit(c.id); };
+    div.querySelector('.pin-card-del').onclick=e=>{ e.stopPropagation(); deleteCat(c.id); };
+    grid.appendChild(div);
+  });
+  const add=document.createElement('div'); add.className='pin-add-card';
+  add.innerHTML='<span style="font-size:22px">+</span><span>Nueva categoría</span>';
+  add.onclick=()=>openPinEdit(null);
+  grid.appendChild(add);
+}
+
+async function deleteCat(id){
+  if(obras.some(o=>o.catId===id)){alert('Esta categoría está en uso. Reasigna esas obras primero.');return;}
+  if(!confirm('¿Eliminar esta categoría?')) return;
+  await deleteCatFS(id);
+  cats=cats.filter(c=>c.id!==id);
+  buildTipoSelect(); renderPinsGrid(); renderAll();
+}
+
+function openPinEdit(id){
+  editingCatId=id;
+  const c=id?getCat(id):{id:'',name:'',color:'#1565C0',icon:'',vial:false};
+  currentPinColor=c.color; currentPinIcon=c.icon||'';
+  document.getElementById('pin-edit-title').textContent=id?`Editando: ${c.name}`:'Nueva categoría';
+  document.getElementById('pin-name').value=c.name;
+  document.getElementById('pin-color-input').value=c.color;
+  document.getElementById('pin-color-hex').textContent=c.color;
+  document.getElementById('pin-vial').checked=!!c.vial;
+  buildColorSwatches();
+  if(c.icon){ document.getElementById('pin-icon-preview').src=c.icon; document.getElementById('icon-preview-wrap').style.display='flex'; document.getElementById('icon-drop').style.display='none'; }
+  else{ document.getElementById('icon-preview-wrap').style.display='none'; document.getElementById('icon-drop').style.display='block'; }
+  updatePinPreview();
+  document.getElementById('pin-edit-form').classList.add('open');
+  document.getElementById('pins-modal-body').scrollTop=9999;
+}
+
+function buildColorSwatches(){
+  const row=document.getElementById('color-swatches'); row.innerHTML='';
+  PRESET_COLORS.forEach(col=>{
+    const sw=document.createElement('div'); sw.className='color-swatch'+(col===currentPinColor?' active':'');
+    sw.style.background=col; sw.title=col;
+    sw.onclick=()=>{ currentPinColor=col; document.getElementById('pin-color-input').value=col; document.getElementById('pin-color-hex').textContent=col; document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('active',s.title===col)); updatePinPreview(); };
+    row.appendChild(sw);
+  });
+}
+document.getElementById('pin-color-input').addEventListener('input',function(){
+  currentPinColor=this.value; document.getElementById('pin-color-hex').textContent=this.value;
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active')); updatePinPreview();
+});
+function updatePinPreview(){
+  document.getElementById('pin-prev-proy').innerHTML=pinSvg(currentPinColor,currentPinIcon,null,40);
+  document.getElementById('pin-prev-proc').innerHTML=pinSvg(currentPinColor,currentPinIcon,ICON_GEAR,40);
+  document.getElementById('pin-prev-term').innerHTML=pinSvg(currentPinColor,currentPinIcon,ICON_CHECK,40);
+}
+
+const iconDrop=document.getElementById('icon-drop');
+const iconFile=document.getElementById('icon-file');
+iconDrop.addEventListener('click',()=>iconFile.click());
+iconDrop.addEventListener('dragover',e=>{e.preventDefault();iconDrop.style.borderColor='#4a1942';});
+iconDrop.addEventListener('dragleave',()=>iconDrop.style.borderColor='');
+iconDrop.addEventListener('drop',e=>{e.preventDefault();iconDrop.style.borderColor='';if(e.dataTransfer.files[0])processIcon(e.dataTransfer.files[0]);});
+iconFile.addEventListener('change',()=>{if(iconFile.files[0])processIcon(iconFile.files[0]);});
+document.getElementById('icon-remove').onclick=()=>{ currentPinIcon=''; document.getElementById('icon-preview-wrap').style.display='none'; document.getElementById('icon-drop').style.display='block'; iconFile.value=''; updatePinPreview(); };
+
+function processIcon(file){
+  if(!['image/svg+xml','image/png'].includes(file.type)){alert('Solo SVG o PNG.');return;}
+  if(file.size>50*1024){alert('Máximo 50 KB.');return;}
+  const r=new FileReader();
+  r.onload=e=>{ currentPinIcon=e.target.result; document.getElementById('pin-icon-preview').src=e.target.result; document.getElementById('icon-preview-wrap').style.display='flex'; document.getElementById('icon-drop').style.display='none'; updatePinPreview(); };
+  r.readAsDataURL(file);
+}
+
+document.getElementById('pin-edit-cancel').onclick=()=>document.getElementById('pin-edit-form').classList.remove('open');
+document.getElementById('pin-edit-save').onclick=async()=>{
+  const name=document.getElementById('pin-name').value.trim();
+  if(!name){alert('El nombre es requerido.');return;}
+  const isVial=document.getElementById('pin-vial').checked;
+  const c={id:editingCatId||'c'+Date.now(),name,color:currentPinColor,icon:currentPinIcon,vial:isVial};
+  await saveCatFS(c);
+  if(editingCatId) cats=cats.map(x=>x.id===editingCatId?c:x); else cats.push(c);
+  buildTipoSelect(); renderPinsGrid(); renderAll();
+  document.getElementById('pin-edit-form').classList.remove('open');
+};
+
+document.getElementById('pin-add-new').onclick=()=>openPinEdit(null);
+document.getElementById('btn-pins').onclick=()=>{ document.getElementById('overlay-pins').classList.add('open'); renderPinsGrid(); document.getElementById('pin-edit-form').classList.remove('open'); };
+document.getElementById('pins-close').onclick=()=>document.getElementById('overlay-pins').classList.remove('open');
+document.getElementById('pins-done').onclick=()=>document.getElementById('overlay-pins').classList.remove('open');
+document.getElementById('overlay-pins').onclick=e=>{if(e.target.id==='overlay-pins')document.getElementById('overlay-pins').classList.remove('open');};
+
+// ── MAP INIT ──
+function initMap(){
+  map=L.map('map',{center:[19.000,-98.200],zoom:13});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+  map.on('click',e=>{
+    if(pickMode){
+      const {lat,lng}=e.latlng;
+      document.getElementById('f-lat').value=lat.toFixed(6);
+      document.getElementById('f-lng').value=lng.toFixed(6);
+      if(tmpMk) map.removeLayer(tmpMk);
+      tmpMk=L.marker([lat,lng]).addTo(map);
+      setPickMode(false);
+      document.getElementById('overlay-obra').classList.add('open');
+      formDirty=true;
+      geoDetect(lat,lng);
+      return;
+    }
+    if(traceMode){
+      const pt=[e.latlng.lat,e.latlng.lng];
+      pendingTrace.push(pt);
+      traceMarkers.push(L.circleMarker(pt,{radius:5,color:'#fff',fillColor:'#2E7D32',fillOpacity:1,weight:2}).addTo(map));
+      if(pendingTrace.length>=2){ if(livePolyline) map.removeLayer(livePolyline); livePolyline=L.polyline(pendingTrace,{color:'#2E7D32',weight:5,dashArray:'8 4'}).addTo(map); }
+      updateTraceBar();
+    }
+  });
+  map.on('dblclick',()=>{ if(traceMode) stopTrace(true); });
+}
+
+const leafletScript=document.createElement('script');
+leafletScript.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
+leafletScript.onload=initMap;
+document.head.appendChild(leafletScript);
+</script>
+</body>
+</html>
