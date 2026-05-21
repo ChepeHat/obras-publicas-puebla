@@ -576,8 +576,7 @@ async function loginWithGoogle(){
 function openLoginModal(){ document.getElementById('overlay-login').classList.add('open'); }
 function closeLoginModal(){ document.getElementById('overlay-login').classList.remove('open'); }
 
-// Handle redirect result — kept as fallback
-getRedirectResult(auth).catch(e=>console.warn('Redirect result error:',e));
+
 
 onAuthStateChanged(auth, async user=>{
   if(user){
