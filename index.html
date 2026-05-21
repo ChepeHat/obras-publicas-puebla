@@ -546,15 +546,14 @@ async function loginWithGoogle(){
   }
 }
 
-// Handle redirect result on page load
+// Handle redirect result on page load — runs before onAuthStateChanged
 getRedirectResult(auth).then(async result=>{
-  if(result?.user){
-    // Auth state listener will handle the rest
-    console.log('Redirect login exitoso:', result.user.email);
-  }
-}).catch(e=>{ console.error('Redirect error:', e); });
+  if(result?.user) console.log('Redirect OK:', result.user.email);
+}).catch(e=>console.error('Redirect error:',e));
 
 onAuthStateChanged(auth, async user=>{
+  // Hide login screen always — viewer mode is default
+  document.getElementById('login-screen').classList.add('hidden');
   if(user){
     currentUser=user;
     const editorOk = await checkEditor(user.uid);
@@ -578,9 +577,8 @@ onAuthStateChanged(auth, async user=>{
     await loadCats();
     subscribeObras();
   } else {
-    // anonymous viewer — still load data
+    // Not logged in — viewer mode
     currentUser=null; isEditor=false;
-    document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('btn-login-header').style.display='';
     document.getElementById('user-info').style.display='none';
     document.getElementById('btn-logout').style.display='none';
@@ -593,6 +591,7 @@ onAuthStateChanged(auth, async user=>{
   }
 });
 
+// Login buttons — both trigger redirect
 document.getElementById('btn-google-login').onclick = loginWithGoogle;
 document.getElementById('btn-login-header').onclick = loginWithGoogle;
 document.getElementById('btn-logout').onclick = ()=>signOut(auth);
