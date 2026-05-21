@@ -511,7 +511,12 @@ async function saveObra(o){
     let imgUrl = o.img||'';
     try{ imgUrl = await uploadToCloudinary(o.img); }
     catch(e){ console.warn('Imagen no subida:',e); imgUrl=''; }
-    const obraToSave={...o, img:imgUrl, tramo:simplifyTramo(o.tramo||[])};
+    // Garantizar que tramo nunca tiene arrays anidados
+    const tramoFinal = (o.tramo||[]).map(p=>
+      Array.isArray(p) ? {lat:p[0], lng:p[1]} : {lat:p.lat, lng:p.lng}
+    );
+    const obraToSave={...o, img:imgUrl, tramo:tramoFinal};
+    console.log('Guardando obra, tramo puntos:', tramoFinal.length);
     await setDoc(doc(db,'obras',o.id), obraToSave);
   });
 }
@@ -925,6 +930,11 @@ document.getElementById('btn-save').onclick=async()=>{
   if(isNaN(lat)||isNaN(lng)){alert('Selecciona la ubicación del pin.');return;}
   const catId=document.getElementById('f-tipo').value;
   const cat=getCat(catId);
+  // Siempre convertir tramo a objetos {lat,lng} antes de guardar
+  const tramoSeguro = (cat.vial ? currentTramo : []).map(p =>
+    Array.isArray(p) ? {lat: p[0], lng: p[1]} : {lat: p.lat, lng: p.lng}
+  );
+
   const o={
     id:editId||String(Date.now()),
     nombre:nom,
@@ -938,7 +948,7 @@ document.getElementById('btn-save').onclick=async()=>{
     img:currentImgBase64, lat, lng,
     longitud:cat.vial?parseFloat(document.getElementById('f-longitud').value)||null:null,
     area:cat.vial?parseFloat(document.getElementById('f-area').value)||null:null,
-    tramo:cat.vial?currentTramo:[]
+    tramo: tramoSeguro
   };
   formDirty=false;
   await saveObra(o);
