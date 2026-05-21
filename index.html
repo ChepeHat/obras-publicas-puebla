@@ -9,16 +9,9 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
 html,body{height:100%;overflow:hidden}
 body{display:flex;flex-direction:column;background:#f0ede8}
-
-/* Login modal */
-.btn-google:hover{background:#f5f5f5!important;border-color:#bbb!important}
-
-/* VIEWER BADGE */
 #mode-badge{position:fixed;bottom:12px;left:12px;z-index:1000;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;pointer-events:none}
 #mode-badge.viewer{background:rgba(0,0,0,.55);color:#fff}
 #mode-badge.editor{background:#2E7D32;color:#fff}
-
-/* HEADER */
 #header{background:#4a1942;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
 #header h1{font-size:14px;font-weight:600}
 #header p{font-size:10px;opacity:.6;margin-top:1px}
@@ -26,16 +19,13 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 .hbtn{color:#fff;border:1.5px solid rgba(255,255,255,.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer}
 .hbtn-purple{background:#7b2d72}.hbtn-purple:hover{background:#9c3a91}
 .hbtn-blue{background:#1a5276}.hbtn-blue:hover{background:#21618C}
-.hbtn-red{background:#922b21;border-color:rgba(255,255,255,.2)}.hbtn-red:hover{background:#b03a2e}
+.hbtn-red{background:#922b21}.hbtn-red:hover{background:#b03a2e}
+.hbtn-green{background:#2E7D32}.hbtn-green:hover{background:#388E3C}
 #user-info{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.8)}
 #user-avatar{width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4)}
-
-/* MAP MODE BAR */
 #map-mode-bar{display:none;padding:9px 16px;font-size:12px;font-weight:600;text-align:center;flex-shrink:0}
 #map-mode-bar.pick{display:flex;justify-content:center;align-items:center;gap:8px;background:#E3F2FD;border-bottom:2px solid #1565C0;color:#0D47A1}
 #map-mode-bar.trace{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;background:#E8F5E9;border-bottom:2px solid #2E7D32;color:#1B5E20}
-
-/* CONTROLS */
 #controls{background:#fff;padding:7px 12px;display:flex;gap:7px;flex-wrap:wrap;border-bottom:1px solid #e0e0e0;flex-shrink:0;align-items:center}
 .filter-btn{border:1.5px solid #ddd;background:#fff;padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:500;color:#555}
 .filter-btn.active{color:#fff;border-color:transparent}
@@ -45,8 +35,6 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 .filter-btn[data-status="terminada"].active{background:#2E7D32}
 #search{border:1.5px solid #ddd;border-radius:20px;padding:5px 12px;font-size:12px;outline:none;width:160px;color:#333}
 #search:focus{border-color:#4a1942}
-
-/* MAIN */
 #main{display:flex;flex:1;overflow:hidden;min-height:0}
 #map{flex:1;min-width:0}
 #panel{width:280px;background:#fff;border-left:1px solid #e0e0e0;overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
@@ -58,14 +46,9 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 .obra-item-sub{font-size:11px;color:#666;margin-bottom:3px}
 .obra-item-badges{display:flex;gap:4px;flex-wrap:wrap}
 .badge{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600}
-
-/* MODALS */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center}
 .overlay.open{display:flex}
 .modal{background:#fff;border-radius:12px;max-width:96vw;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
-#modal-obra{width:520px}
-#modal-pins{width:700px}
-#modal-confirm{width:380px}
 .modal-hdr{padding:13px 16px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10;flex-shrink:0}
 .modal-hdr h2{font-size:15px;font-weight:700;color:#4a1942}
 .modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;line-height:1}
@@ -97,10 +80,9 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 .btn-sec{background:#fff;border:1.5px solid #ccc;padding:7px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;color:#333}
 .btn-pri{background:#4a1942;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600}
 .btn-del{background:#c62828;color:#fff;border:none;padding:7px 13px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600;margin-right:auto}
-.btn-green{background:#2E7D32;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
-.btn-orange{background:#E65100;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
+.btn-grn{background:#2E7D32;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
+.btn-org{background:#E65100;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
 .btn-warn{background:#F57F17;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600}
-/* PIN EDITOR */
 #pins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:12px}
 .pin-card{border:2px solid #eee;border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
 .pin-card:hover{border-color:#7b2d72;background:#fdf5fc}
@@ -113,11 +95,10 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 #pin-edit-form{background:#f8f5fb;border-radius:10px;padding:14px;display:none;flex-direction:column;gap:12px;border:1.5px solid #e0d0de}
 #pin-edit-form.open{display:flex}
 .color-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
-.color-swatch{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15s;flex-shrink:0}
+.color-swatch{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15px;flex-shrink:0}
 .color-swatch.active{border-color:#222;transform:scale(1.2)}
-.icon-drop{border:2px dashed #ccc;border-radius:8px;padding:10px;text-align:center;cursor:pointer;background:#fff;font-size:11px;color:#888;transition:all .2s}
+.icon-drop{border:2px dashed #ccc;border-radius:8px;padding:10px;text-align:center;cursor:pointer;background:#fff;font-size:11px;color:#888}
 .icon-drop:hover{border-color:#4a1942;color:#4a1942}
-/* POPUP CARD */
 .leaflet-popup-content-wrapper{border-radius:14px!important;padding:0!important;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.25)!important}
 .leaflet-popup-content{margin:0!important;width:268px!important;min-width:268px!important}
 .leaflet-popup-tip-container{display:none}
@@ -145,32 +126,10 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 .empty{padding:40px 16px;text-align:center;color:#aaa;font-size:13px}
 .obra-label{background:transparent;border:none;box-shadow:none}
 .obra-label-inner{background:rgba(255,255,255,.92);border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-/* SAVING INDICATOR */
 #saving{position:fixed;top:52px;right:12px;background:#1B5E20;color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;z-index:5000;display:none}
-#confirm-modal-body{align-items:center;text-align:center;padding:24px;display:flex;flex-direction:column;gap:8px}
 </style>
 </head>
 <body>
-
-<!-- LOGIN MODAL (solo para editor) -->
-<div class="overlay" id="overlay-login">
-  <div class="modal" style="width:360px;padding:0">
-    <div style="background:linear-gradient(135deg,#4a1942,#7b2d72);padding:28px 24px 20px;text-align:center;border-radius:12px 12px 0 0">
-      <div style="font-size:32px;margin-bottom:8px">🏛️</div>
-      <h2 style="color:#fff;font-size:17px;font-weight:700;margin-bottom:4px">Acceso Editor</h2>
-      <p style="color:rgba(255,255,255,.7);font-size:12px">Solo para funcionarios autorizados</p>
-    </div>
-    <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px">
-      <button class="btn-google" id="btn-google-login" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1.5px solid #ddd;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;color:#333;transition:all .2s">
-        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z"/></svg>
-        Iniciar sesión con Google
-      </button>
-      <div id="login-error" style="font-size:11px;color:#c62828;text-align:center;display:none"></div>
-      <p style="font-size:10px;color:#aaa;text-align:center;line-height:1.5">Solo cuentas autorizadas tendrán acceso al modo editor. El resto verá el mapa en modo visualización.</p>
-      <button class="btn-sec" id="login-cancel" style="font-size:12px">Cancelar</button>
-    </div>
-  </div>
-</div>
 
 <div id="saving">💾 Guardando…</div>
 <div id="mode-badge" class="viewer">👁 Solo visualización</div>
@@ -178,14 +137,11 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 <div id="header">
   <div><h1>Mapa de Obras Públicas</h1><p>Transparencia ciudadana — Gobierno Municipal de Puebla</p></div>
   <div id="header-btns">
-    <div id="user-info" style="display:none">
-      <img id="user-avatar" src="" alt=""/>
-      <span id="user-name"></span>
-    </div>
+    <div id="user-info" style="display:none"><img id="user-avatar" src="" alt=""/><span id="user-name"></span></div>
     <button class="hbtn hbtn-blue" id="btn-pins" style="display:none">⬡ Categorías</button>
     <button class="hbtn hbtn-purple" id="btn-add" style="display:none">+ Nueva obra</button>
     <button class="hbtn hbtn-red" id="btn-logout" style="display:none">Salir</button>
-    <button class="hbtn" id="btn-login-header" style="background:#2E7D32">🔐 Acceso editor</button>
+    <button class="hbtn hbtn-green" id="btn-login-header">🔐 Acceso editor</button>
   </div>
 </div>
 <div id="map-mode-bar"></div>
@@ -204,9 +160,43 @@ body{display:flex;flex-direction:column;background:#f0ede8}
   </div>
 </div>
 
+<!-- LOGIN MODAL -->
+<div class="overlay" id="overlay-login">
+  <div class="modal" style="width:360px">
+    <div style="background:linear-gradient(135deg,#4a1942,#7b2d72);padding:28px 24px 20px;text-align:center;border-radius:12px 12px 0 0">
+      <div style="font-size:32px;margin-bottom:8px">🏛️</div>
+      <h2 style="color:#fff;font-size:17px;font-weight:700;margin-bottom:4px">Acceso Editor</h2>
+      <p style="color:rgba(255,255,255,.7);font-size:12px">Solo para funcionarios autorizados</p>
+    </div>
+    <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px">
+      <button id="btn-google-login" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1.5px solid #ddd;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;color:#333;width:100%">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z"/></svg>
+        Iniciar sesión con Google
+      </button>
+      <div id="login-error" style="font-size:11px;color:#c62828;text-align:center;display:none"></div>
+      <p style="font-size:10px;color:#aaa;text-align:center;line-height:1.5">Solo cuentas autorizadas tendrán acceso de edición.</p>
+      <button class="btn-sec" id="login-cancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM CANCEL -->
+<div class="overlay" id="overlay-confirm">
+  <div class="modal" style="width:360px">
+    <div class="modal-body" style="align-items:center;text-align:center;padding:28px">
+      <span style="font-size:36px">⚠️</span>
+      <p style="font-size:14px;color:#333;line-height:1.6;margin-top:8px"><strong>¿Descartar cambios?</strong><br>Los datos ingresados se perderán.</p>
+    </div>
+    <div class="modal-ftr" style="justify-content:center;gap:12px">
+      <button class="btn-sec" id="confirm-no">Seguir editando</button>
+      <button class="btn-warn" id="confirm-yes">Sí, descartar</button>
+    </div>
+  </div>
+</div>
+
 <!-- OBRA MODAL -->
 <div class="overlay" id="overlay-obra">
-<div class="modal" id="modal-obra">
+<div class="modal" style="width:520px">
   <div class="modal-hdr"><h2 id="modal-title">Nueva Obra</h2><button class="modal-close" id="obra-close">&times;</button></div>
   <div class="modal-body">
     <div class="sec">Datos generales</div>
@@ -227,14 +217,13 @@ body{display:flex;flex-direction:column;background:#f0ede8}
         <select id="f-junta">
           <option value="">— Seleccionar —</option>
           <option>Zona Metropolitana</option><option>Ignacio Romero Vargas</option>
-          <option>Ignacio Zaragoza</option><option>La Libertad</option>
-          <option>La Resurrección</option><option>San Andrés Azumiatla</option>
-          <option>San Baltazar Campeche</option><option>San Baltazar Tetela</option>
-          <option>San Felipe Hueyotlipan</option><option>San Francisco Totimehuacán</option>
-          <option>San Jerónimo Caleras</option><option>San Miguel Canoa</option>
-          <option>San Pablo Xochimehuacán</option><option>San Pedro Zacachimalpa</option>
-          <option>Santa María Guadalupe Tecola</option><option>Santa María Xonacatepec</option>
-          <option>Santo Tomás Chautla</option>
+          <option>Ignacio Zaragoza</option><option>La Libertad</option><option>La Resurrección</option>
+          <option>San Andrés Azumiatla</option><option>San Baltazar Campeche</option>
+          <option>San Baltazar Tetela</option><option>San Felipe Hueyotlipan</option>
+          <option>San Francisco Totimehuacán</option><option>San Jerónimo Caleras</option>
+          <option>San Miguel Canoa</option><option>San Pablo Xochimehuacán</option>
+          <option>San Pedro Zacachimalpa</option><option>Santa María Guadalupe Tecola</option>
+          <option>Santa María Xonacatepec</option><option>Santo Tomás Chautla</option>
         </select>
       </div>
     </div>
@@ -244,11 +233,7 @@ body{display:flex;flex-direction:column;background:#f0ede8}
     </div>
     <div class="form-row">
       <div class="fg"><label>Estatus</label>
-        <select id="f-status">
-          <option value="proyectada">Proyectada</option>
-          <option value="proceso">En proceso</option>
-          <option value="terminada">Terminada</option>
-        </select>
+        <select id="f-status"><option value="proyectada">Proyectada</option><option value="proceso">En proceso</option><option value="terminada">Terminada</option></select>
       </div>
     </div>
     <div class="form-row">
@@ -276,7 +261,7 @@ body{display:flex;flex-direction:column;background:#f0ede8}
         <div style="font-size:12px;font-weight:700;color:#1B5E20">📍 Tramo sobre el mapa</div>
         <div id="trace-info" style="font-size:11px;color:#888">Sin tramo trazado.</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn-green" id="btn-open-trace">✏️ Trazar</button>
+          <button class="btn-grn" id="btn-open-trace">✏️ Trazar</button>
           <button class="btn-sec" id="btn-clear-trace" style="font-size:12px;padding:6px 10px">🗑 Borrar</button>
         </div>
         <div style="font-size:10px;color:#666">Clic punto a punto. "Finalizar" o doble clic para terminar.</div>
@@ -291,23 +276,9 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 </div>
 </div>
 
-<!-- CONFIRM CANCEL -->
-<div class="overlay" id="overlay-confirm">
-<div class="modal" id="modal-confirm" style="width:360px">
-  <div id="confirm-modal-body" class="modal-body" style="align-items:center;text-align:center">
-    <span style="font-size:36px">⚠️</span>
-    <p style="font-size:14px;color:#333;line-height:1.6"><strong>¿Descartar cambios?</strong><br>Los datos ingresados se perderán.</p>
-  </div>
-  <div class="modal-ftr" style="justify-content:center;gap:12px">
-    <button class="btn-sec" id="confirm-no">Seguir editando</button>
-    <button class="btn-warn" id="confirm-yes">Sí, descartar</button>
-  </div>
-</div>
-</div>
-
 <!-- PIN EDITOR -->
 <div class="overlay" id="overlay-pins">
-<div class="modal" id="modal-pins">
+<div class="modal" style="width:700px">
   <div class="modal-hdr"><h2>Editor de Categorías de Pin</h2><button class="modal-close" id="pins-close">&times;</button></div>
   <div class="modal-body" id="pins-modal-body">
     <div style="font-size:12px;color:#666">Haz clic en una categoría para editarla.</div>
@@ -325,9 +296,9 @@ body{display:flex;flex-direction:column;background:#f0ede8}
         </div>
       </div>
       <div class="fg">
-        <label>Ícono (SVG o PNG · Máx 50 KB · 64×64 px)</label>
+        <label>Ícono (SVG o PNG · Máx 50 KB)</label>
         <div style="display:flex;gap:10px;align-items:center">
-          <div class="icon-drop" id="icon-drop" style="flex:1">Clic o arrastra ícono SVG/PNG<br><span style="font-size:10px">Fondo transparente</span><input id="icon-file" type="file" accept="image/svg+xml,image/png" style="display:none"/></div>
+          <div class="icon-drop" id="icon-drop" style="flex:1">Clic o arrastra ícono<input id="icon-file" type="file" accept="image/svg+xml,image/png" style="display:none"/></div>
           <div id="icon-preview-wrap" style="display:none;flex-direction:column;align-items:center;gap:4px">
             <img id="pin-icon-preview" style="width:48px;height:48px;object-fit:contain;border-radius:6px;background:#eee"/>
             <button class="btn-sec" id="icon-remove" style="font-size:10px;padding:3px 8px">Quitar</button>
@@ -361,7 +332,6 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 </div>
 </div>
 
-<!-- FIREBASE + APP -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
@@ -369,8 +339,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-
-// ── CONFIG ──
 const firebaseConfig = {
   apiKey: "AIzaSyA7Pk8IwoR45PmUUvIHWxb6cpU9rSh1Sgs",
   authDomain: "obras-publicas-puebla.firebaseapp.com",
@@ -379,21 +347,21 @@ const firebaseConfig = {
   messagingSenderId: "1040966007077",
   appId: "1:1040966007077:web:956b2ee0cde6aa63c202cc"
 };
+
+const CLOUDINARY_CLOUD  = 'dh5g9jnze';
+const CLOUDINARY_PRESET = 'obras_puebla';
+const CLOUDINARY_URL    = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
+
 const fbApp = initializeApp(firebaseConfig);
 const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
+const provider = new GoogleAuthProvider();
 
-// ── CLOUDINARY CONFIG ──
-const CLOUDINARY_CLOUD = 'dh5g9jnze';
-const CLOUDINARY_PRESET = 'obras_puebla';
-const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
-
-// ── STATE ──
-const ICON_GEAR  = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94zM12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>');
-const ICON_CHECK = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+const ICON_GEAR  = 'data:image/svg+xml;base64,'+btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94zM12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>');
+const ICON_CHECK = 'data:image/svg+xml;base64,'+btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
 const PRESET_COLORS = ['#E65100','#4527A0','#0D47A1','#006064','#1B5E20','#B71C1C','#37474F','#1565C0','#880E4F','#F57F17','#4E342E','#546E7A','#4a1942','#00695C'];
-const ST_COL = {proyectada:'#E67E22', proceso:'#1565C0', terminada:'#2E7D32'};
-const ST_LBL = {proyectada:'Proyectada', proceso:'En proceso', terminada:'Terminada'};
+const ST_COL = {proyectada:'#E67E22',proceso:'#1565C0',terminada:'#2E7D32'};
+const ST_LBL = {proyectada:'Proyectada',proceso:'En proceso',terminada:'Terminada'};
 const DEFAULT_CATS = [
   {id:'c1',name:'Pavimentación',color:'#E65100',icon:'',vial:true},
   {id:'c2',name:'Rehabilitación Vial',color:'#4527A0',icon:'',vial:true},
@@ -422,7 +390,28 @@ const fmt = d => { if(!d) return '--'; const [y,m,dd]=d.split('-'); return `${dd
 const fmtMdp = v => { const n=parseFloat(v); return (!n||isNaN(n))? '--' : (n/1e6).toFixed(2)+' MDP'; };
 const fmtInvFull = v => { const n=parseFloat(v); if(!n||isNaN(n)) return '—'; return n.toLocaleString('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0})+' &nbsp;·&nbsp; '+(n/1e6).toFixed(2)+' MDP'; };
 const getCat = id => cats.find(c=>c.id===id) || {id:'',color:'#888',icon:'',name:'—',vial:false};
-const showSaving = () => { const s=document.getElementById('saving'); s.style.display='block'; setTimeout(()=>s.style.display='none',1800); };
+const showSaving = () => { const s=document.getElementById('saving'); s.style.display='block'; setTimeout(()=>s.style.display='none',2000); };
+
+// Convierte tramo de Firestore [{lat,lng}] o [[lat,lng]] → [[lat,lng]] para Leaflet
+function parseTramo(tramo){
+  if(!tramo||!tramo.length) return [];
+  return tramo.map(p => Array.isArray(p) ? [p[0],p[1]] : [p.lat, p.lng]);
+}
+
+// Convierte tramo [[lat,lng]] → [{lat,lng}] para Firestore (no permite arrays anidados)
+function tramoToFirestore(tramo){
+  if(!tramo||!tramo.length) return [];
+  let pts = tramo;
+  if(pts.length > 60){
+    const step = Math.ceil(pts.length/60);
+    pts = pts.filter((_,i)=>i%step===0);
+    if(pts[pts.length-1] !== tramo[tramo.length-1]) pts.push(tramo[tramo.length-1]);
+  }
+  return pts.map(p => Array.isArray(p)
+    ? {lat: Math.round(p[0]*1e6)/1e6, lng: Math.round(p[1]*1e6)/1e6}
+    : {lat: Math.round(p.lat*1e6)/1e6, lng: Math.round(p.lng*1e6)/1e6}
+  );
+}
 
 // ── PIN SVG ──
 function pinSvg(color, catIcon, statusIcon, size=38){
@@ -437,24 +426,17 @@ function pinSvg(color, catIcon, statusIcon, size=38){
     svg+=`<circle cx="${bx}" cy="${by}" r="${br}" fill="${color}"/><image href="${statusIcon}" x="${bx-br*.85}" y="${by-br*.85}" width="${br*1.7}" height="${br*1.7}"/>`; }
   return svg+'</svg>';
 }
-const statusIcon = s => s==='proceso'?ICON_GEAR : s==='terminada'?ICON_CHECK : null;
+const stIcon = s => s==='proceso'?ICON_GEAR : s==='terminada'?ICON_CHECK : null;
 const mkLeafletIcon = (status,catId) => {
   const cat=getCat(catId);
-  return L.divIcon({html:pinSvg(cat.color,cat.icon||'',statusIcon(status),38),className:'',iconSize:[38,48],iconAnchor:[19,48],popupAnchor:[0,-50]});
+  return L.divIcon({html:pinSvg(cat.color,cat.icon||'',stIcon(status),38),className:'',iconSize:[38,48],iconAnchor:[19,48],popupAnchor:[0,-50]});
 };
 
 // ── FIRESTORE ──
-async function savingShow(fn){ showSaving(); await fn(); }
-
 async function loadCats(){
   const snap = await getDocs(collection(db,'categorias'));
-  if(snap.empty){
-    // seed defaults
-    for(const c of DEFAULT_CATS) await setDoc(doc(db,'categorias',c.id),c);
-    cats=[...DEFAULT_CATS];
-  } else {
-    cats=snap.docs.map(d=>({id:d.id,...d.data()}));
-  }
+  if(snap.empty){ for(const c of DEFAULT_CATS) await setDoc(doc(db,'categorias',c.id),c); cats=[...DEFAULT_CATS]; }
+  else cats=snap.docs.map(d=>({id:d.id,...d.data()}));
   buildTipoSelect();
 }
 
@@ -465,7 +447,23 @@ function subscribeObras(){
   });
 }
 
-// ── IMAGE HELPERS ──
+async function checkEditor(uid){
+  try{
+    const d=await getDoc(doc(db,'editores',uid));
+    if(d.exists()){ const data=d.data(); return data.activo===true||data.activo==='true'; }
+    return false;
+  } catch(e){
+    console.warn('checkEditor error:',e);
+    return new Promise(resolve=>{
+      setTimeout(async()=>{
+        try{ const d2=await getDoc(doc(db,'editores',uid)); resolve(d2.exists()&&d2.data().activo===true); }
+        catch{ resolve(false); }
+      },2000);
+    });
+  }
+}
+
+// ── IMAGE ──
 function compressImage(base64, maxW=1200, quality=0.78){
   return new Promise(resolve=>{
     const img=new Image();
@@ -482,80 +480,41 @@ function compressImage(base64, maxW=1200, quality=0.78){
 
 async function uploadToCloudinary(base64){
   if(!base64) return '';
-  if(base64.startsWith('http')) return base64; // already uploaded URL
+  if(base64.startsWith('http')) return base64;
   const compressed = await compressImage(base64);
   const blob = await fetch(compressed).then(r=>r.blob());
   const fd = new FormData();
   fd.append('file', blob);
   fd.append('upload_preset', CLOUDINARY_PRESET);
-  fd.append('folder', 'obras_puebla');
-  const res = await fetch(CLOUDINARY_URL, {method:'POST', body:fd});
-  if(!res.ok) throw new Error('Error subiendo imagen a Cloudinary');
-  const data = await res.json();
-  return data.secure_url;
-}
-
-// Simplify tramo — max 60 points to stay under Firestore 1MB limit
-function simplifyTramo(tramo){
-  if(!tramo||tramo.length<=60) return (tramo||[]).map(
-    ([lat,lng])=>[Math.round(lat*1e6)/1e6, Math.round(lng*1e6)/1e6]);
-  const step=Math.ceil(tramo.length/60);
-  const out=tramo.filter((_,i)=>i%step===0);
-  if(out[out.length-1]!==tramo[tramo.length-1]) out.push(tramo[tramo.length-1]);
-  return out.map(([lat,lng])=>[Math.round(lat*1e6)/1e6, Math.round(lng*1e6)/1e6]);
+  fd.append('folder','obras_puebla');
+  const res = await fetch(CLOUDINARY_URL,{method:'POST',body:fd});
+  if(!res.ok) throw new Error('Cloudinary error');
+  return (await res.json()).secure_url;
 }
 
 async function saveObra(o){
-  await savingShow(async()=>{
-    showSaving();
-    let imgUrl = o.img||'';
-    try{ imgUrl = await uploadToCloudinary(o.img); }
-    catch(e){ console.warn('Imagen no subida:',e); imgUrl=''; }
-    // Garantizar que tramo nunca tiene arrays anidados
-    const tramoFinal = (o.tramo||[]).map(p=>
-      Array.isArray(p) ? {lat:p[0], lng:p[1]} : {lat:p.lat, lng:p.lng}
-    );
-    const obraToSave={...o, img:imgUrl, tramo:tramoFinal};
-    console.log('Guardando obra, tramo puntos:', tramoFinal.length);
-    await setDoc(doc(db,'obras',o.id), obraToSave);
-  });
+  showSaving();
+  let imgUrl='';
+  try{ imgUrl = await uploadToCloudinary(o.img); }
+  catch(e){ console.warn('Imagen no subida:',e); imgUrl = o.img?.startsWith('http')?o.img:''; }
+  const obraToSave = {
+    ...o,
+    img: imgUrl,
+    tramo: tramoToFirestore(o.tramo||[])
+  };
+  console.log('Guardando obra, tramo puntos:', obraToSave.tramo.length);
+  await setDoc(doc(db,'obras',o.id), obraToSave);
 }
 
 async function deleteObraFS(id){
-  await savingShow(async()=>{ await deleteDoc(doc(db,'obras',id)); });
+  showSaving();
+  await deleteDoc(doc(db,'obras',id));
 }
-async function saveCatFS(c){
-  await savingShow(async()=>{ await setDoc(doc(db,'categorias',c.id),c); });
-}
-async function deleteCatFS(id){
-  await savingShow(async()=>{ await deleteDoc(doc(db,'categorias',id)); });
-}
-async function checkEditor(uid){
-  try{
-    const d=await getDoc(doc(db,'editores',uid));
-    if(d.exists()){
-      const data=d.data();
-      // acepta tanto true (boolean) como "true" (string) por si acaso
-      return data.activo===true || data.activo==='true';
-    }
-    return false;
-  } catch(e){
-    console.warn('Error verificando editor:', e);
-    // Si Firebase falla temporalmente, reintenta una vez después de 2s
-    return new Promise(resolve=>{
-      setTimeout(async()=>{
-        try{
-          const d2=await getDoc(doc(db,'editores',uid));
-          resolve(d2.exists()&&(d2.data().activo===true||d2.data().activo==='true'));
-        } catch{ resolve(false); }
-      }, 2000);
-    });
-  }
-}
+
+async function saveCatFS(c){ showSaving(); await setDoc(doc(db,'categorias',c.id),c); }
+async function deleteCatFS(id){ showSaving(); await deleteDoc(doc(db,'categorias',id)); }
 
 // ── AUTH ──
-const provider = new GoogleAuthProvider();
-
 async function loginWithGoogle(){
   const errEl=document.getElementById('login-error');
   errEl.style.display='none';
@@ -564,24 +523,19 @@ async function loginWithGoogle(){
     const result = await signInWithPopup(auth, provider);
     console.log('Login OK:', result.user.email);
   } catch(e){
-    console.error('Login error:', e.code, e.message);
-    if(e.code==='auth/popup-blocked'){
-      errEl.textContent='El navegador bloqueó la ventana. Permite popups para este sitio e intenta de nuevo.';
-    } else if(e.code==='auth/popup-closed-by-user'){
-      errEl.textContent='Cerraste la ventana antes de completar el login.';
-    } else if(e.code==='auth/unauthorized-domain'){
-      errEl.textContent='Dominio no autorizado en Firebase. Contacta al administrador.';
-    } else {
-      errEl.textContent='Error: '+e.message;
-    }
+    console.error('Login error:',e.code, e.message);
+    const msgs = {
+      'auth/popup-blocked':'El navegador bloqueó la ventana. Permite popups para este sitio.',
+      'auth/popup-closed-by-user':'Cerraste la ventana antes de completar el login.',
+      'auth/unauthorized-domain':'Dominio no autorizado. Contacta al administrador.'
+    };
+    errEl.textContent = msgs[e.code] || 'Error: '+e.message;
     errEl.style.display='block';
   }
 }
 
 function openLoginModal(){ document.getElementById('overlay-login').classList.add('open'); }
 function closeLoginModal(){ document.getElementById('overlay-login').classList.remove('open'); }
-
-
 
 onAuthStateChanged(auth, async user=>{
   if(user){
@@ -590,8 +544,6 @@ onAuthStateChanged(auth, async user=>{
     const editorOk = await checkEditor(user.uid);
     isEditor=editorOk;
     console.log('Es editor:', editorOk, 'UID:', user.uid);
-
-    // header
     document.getElementById('user-info').style.display='flex';
     document.getElementById('user-avatar').src=user.photoURL||'';
     document.getElementById('user-name').textContent=user.displayName?.split(' ')[0]||'';
@@ -602,28 +554,21 @@ onAuthStateChanged(auth, async user=>{
       document.getElementById('btn-add').style.display='';
       document.getElementById('mode-badge').textContent='✏️ Modo editor';
       document.getElementById('mode-badge').className='editor';
-    } else {
-      document.getElementById('mode-badge').textContent='👁 Solo visualización';
-      document.getElementById('mode-badge').className='viewer';
     }
-    await loadCats();
-    subscribeObras();
+    await loadCats(); subscribeObras();
   } else {
-    // Not logged in — viewer mode
     currentUser=null; isEditor=false;
-    document.getElementById('btn-login-header').style.display='';
     document.getElementById('user-info').style.display='none';
     document.getElementById('btn-logout').style.display='none';
     document.getElementById('btn-pins').style.display='none';
     document.getElementById('btn-add').style.display='none';
+    document.getElementById('btn-login-header').style.display='';
     document.getElementById('mode-badge').textContent='👁 Solo visualización';
     document.getElementById('mode-badge').className='viewer';
-    await loadCats();
-    subscribeObras();
+    await loadCats(); subscribeObras();
   }
 });
 
-// Login / logout buttons
 document.getElementById('btn-google-login').onclick = loginWithGoogle;
 document.getElementById('btn-login-header').onclick = openLoginModal;
 document.getElementById('login-cancel').onclick = closeLoginModal;
@@ -642,7 +587,7 @@ function buildTipoSelect(){
 let geoTimer=null;
 function geoDetect(lat,lng){
   const st=document.getElementById('geo-status');
-  st.textContent='🔍 Detectando colonia y junta auxiliar…'; st.className='geo-badge loading';
+  st.textContent='🔍 Detectando colonia y junta…'; st.className='geo-badge loading';
   clearTimeout(geoTimer);
   geoTimer=setTimeout(()=>{
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=es`,
@@ -658,20 +603,15 @@ function geoDetect(lat,lng){
         if(match){ document.getElementById('f-junta').value=match; document.getElementById('geo-jun-ico').textContent='📍'; }
         st.textContent='✅ Ubicación detectada'; st.className='geo-badge ok';
         setTimeout(()=>{st.className='geo-badge';},3000);
-      }).catch(()=>{
-        st.textContent='⚠ No se pudo detectar'; st.className='geo-badge err';
-        setTimeout(()=>{st.className='geo-badge';},3000);
-      });
+      }).catch(()=>{ st.textContent='⚠ No detectado'; st.className='geo-badge err'; setTimeout(()=>{st.className='geo-badge';},3000); });
   },600);
 }
+
 function matchJunta(a){
   const JUNTAS=['Zona Metropolitana','Ignacio Romero Vargas','Ignacio Zaragoza','La Libertad','La Resurrección','San Andrés Azumiatla','San Baltazar Campeche','San Baltazar Tetela','San Felipe Hueyotlipan','San Francisco Totimehuacán','San Jerónimo Caleras','San Miguel Canoa','San Pablo Xochimehuacán','San Pedro Zacachimalpa','Santa María Guadalupe Tecola','Santa María Xonacatepec','Santo Tomás Chautla'];
   const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   const all=norm(Object.values(a).join(' '));
-  for(const j of JUNTAS){
-    const keys=norm(j).split(' ').filter(w=>w.length>3);
-    if(keys.length&&keys.every(w=>all.includes(w))) return j;
-  }
+  for(const j of JUNTAS){ const keys=norm(j).split(' ').filter(w=>w.length>3); if(keys.length&&keys.every(w=>all.includes(w))) return j; }
   return '';
 }
 
@@ -679,45 +619,22 @@ function matchJunta(a){
 function buildCard(o){
   const cat=getCat(o.catId);
   const sc=ST_COL[o.status]||'#888', sl=ST_LBL[o.status]||o.status;
-  const imgH=o.img?`<img class="c-img" src="${o.img}" onerror="this.style.display='none'"/>`
-                  :`<div class="c-img-ph">🏗️</div>`;
+  const imgH=o.img?`<img class="c-img" src="${o.img}" onerror="this.style.display='none'"/>`:`<div class="c-img-ph">🏗️</div>`;
   const vialMeta=cat.vial?`
-    <div class="c-meta-item"><span class="c-meta-ico">📏</span><div>
-      <div class="c-meta-lbl">Longitud</div>
-      <div class="c-meta-val">${o.longitud?Number(o.longitud).toLocaleString()+' m':'--'}</div></div></div>
-    <div class="c-meta-item"><span class="c-meta-ico">⬛</span><div>
-      <div class="c-meta-lbl">Área</div>
-      <div class="c-meta-val">${o.area?Number(o.area).toLocaleString()+' m²':'--'}</div></div></div>`:'';
-  const editorBtns=isEditor?`
-    <div class="c-actions">
-      <button class="c-btn c-btn-edit" data-oid="${o.id}">✏️ Editar</button>
-      <button class="c-btn c-btn-del" data-oid="${o.id}">🗑 Eliminar</button>
-    </div>`:'';
+    <div class="c-meta-item"><span class="c-meta-ico">📏</span><div><div class="c-meta-lbl">Longitud</div><div class="c-meta-val">${o.longitud?Number(o.longitud).toLocaleString()+' m':'--'}</div></div></div>
+    <div class="c-meta-item"><span class="c-meta-ico">⬛</span><div><div class="c-meta-lbl">Área</div><div class="c-meta-val">${o.area?Number(o.area).toLocaleString()+' m²':'--'}</div></div></div>`:'';
+  const editorBtns=isEditor?`<div class="c-actions"><button class="c-btn c-btn-edit" data-oid="${o.id}">✏️ Editar</button><button class="c-btn c-btn-del" data-oid="${o.id}">🗑 Eliminar</button></div>`:'';
   return `<div class="obra-card">
-    <div class="c-hdr" style="background:${cat.color}">${pinSvg(cat.color,cat.icon||'',statusIcon(o.status),22)}
-      <span class="c-hdr-num">${o.contrato||'—'}</span></div>
+    <div class="c-hdr" style="background:${cat.color}">${pinSvg(cat.color,cat.icon||'',stIcon(o.status),22)}<span class="c-hdr-num">${o.contrato||'—'}</span></div>
     ${imgH}
-    <div class="c-body">
-      <div class="c-name">${(o.nombre||'').toUpperCase()}</div>
-      <div class="c-col">${o.colonia||''}</div>
-      <div class="c-zona">${o.junta||''}</div>
-    </div>
-    <div class="c-pills">
-      <span class="c-pill" style="background:${sc}22;color:${sc}">${sl}</span>
-      <span class="c-pill" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span>
-    </div>
+    <div class="c-body"><div class="c-name">${(o.nombre||'').toUpperCase()}</div><div class="c-col">${o.colonia||''}</div><div class="c-zona">${o.junta||''}</div></div>
+    <div class="c-pills"><span class="c-pill" style="background:${sc}22;color:${sc}">${sl}</span><span class="c-pill" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span></div>
     <hr class="c-hr"/>
     <div class="c-meta">
-      <div class="c-meta-item"><span class="c-meta-ico">📅</span><div>
-        <div class="c-meta-lbl">Plazo</div>
-        <div class="c-meta-val">${fmt(o.inicio)} — ${fmt(o.termino)}</div></div></div>
-      <div class="c-meta-item"><span class="c-meta-ico">💰</span><div>
-        <div class="c-meta-lbl">Inversión</div>
-        <div class="c-meta-val">${fmtMdp(o.inversion)}</div></div></div>
+      <div class="c-meta-item"><span class="c-meta-ico">📅</span><div><div class="c-meta-lbl">Plazo</div><div class="c-meta-val">${fmt(o.inicio)} — ${fmt(o.termino)}</div></div></div>
+      <div class="c-meta-item"><span class="c-meta-ico">💰</span><div><div class="c-meta-lbl">Inversión</div><div class="c-meta-val">${fmtMdp(o.inversion)}</div></div></div>
       ${vialMeta}
-    </div>
-    ${editorBtns}
-  </div>`;
+    </div>${editorBtns}</div>`;
 }
 
 // ── MAP RENDER ──
@@ -738,8 +655,8 @@ function renderMarkers(){
   clearLayers();
   filtered().forEach(o=>{
     const cat=getCat(o.catId);
-    if(o.tramo&&o.tramo.length>=2){
-      const tramoLatLng = parseTramo(o.tramo);
+    const tramoLatLng = parseTramo(o.tramo);
+    if(tramoLatLng.length>=2){
       const pl=L.polyline(tramoLatLng,{color:cat.color,weight:6,opacity:.85,lineJoin:'round',lineCap:'round'}).addTo(map);
       if(o.status==='proyectada') pl.setStyle({dashArray:'10 6'});
       pl.bindPopup(L.popup({maxWidth:280,minWidth:268}).setContent(buildCard(o)));
@@ -768,16 +685,14 @@ function attachPopupEvents(oid){
 
 async function doDeleteObra(id){
   if(!confirm('¿Eliminar esta obra permanentemente?')) return;
-  await deleteObraFS(id);
-  map.closePopup();
+  await deleteObraFS(id); map.closePopup();
 }
 
 function renderPanel(){
   const arr=filtered();
   document.getElementById('count').textContent=`(${arr.length})`;
   document.getElementById('obra-list').innerHTML=arr.length?arr.map(o=>{
-    const cat=getCat(o.catId);
-    const sc=ST_COL[o.status]||'#888',sl=ST_LBL[o.status]||o.status;
+    const cat=getCat(o.catId); const sc=ST_COL[o.status]||'#888',sl=ST_LBL[o.status]||o.status;
     return `<div class="obra-item" onclick="window.focusObra('${o.id}')">
       <div class="obra-item-title">${o.nombre||''}</div>
       <div class="obra-item-sub">${o.colonia||''} · ${o.junta||''}</div>
@@ -792,7 +707,8 @@ function renderAll(){ renderMarkers(); renderPanel(); }
 
 window.focusObra=id=>{
   const o=obras.find(x=>x.id===id); if(!o) return;
-  if(o.tramo?.length>=2&&polylines[id]){
+  const tramoLatLng=parseTramo(o.tramo);
+  if(tramoLatLng.length>=2&&polylines[id]){
     map.fitBounds(polylines[id].getBounds(),{padding:[40,40],maxZoom:17});
     setTimeout(()=>{polylines[id].openPopup();attachPopupEvents(id);},400);
   } else if(o.lat&&o.lng){
@@ -810,22 +726,15 @@ document.querySelectorAll('.filter-btn').forEach(b=>{
 document.getElementById('search').addEventListener('input',e=>{q=e.target.value.toLowerCase();renderAll();});
 
 // ── OBRA MODAL ──
-document.getElementById('f-inversion').addEventListener('input',function(){
-  document.getElementById('inv-preview').innerHTML=fmtInvFull(this.value); formDirty=true;
-});
+document.getElementById('f-inversion').addEventListener('input',function(){ document.getElementById('inv-preview').innerHTML=fmtInvFull(this.value); formDirty=true; });
 document.getElementById('f-tipo').addEventListener('change',function(){
   const cat=getCat(this.value);
   document.getElementById('vial-fields').style.display=cat.vial?'flex':'none';
   formDirty=true;
 });
-['f-nombre','f-colonia','f-contrato','f-inicio','f-termino','f-longitud','f-area'].forEach(id=>{
-  document.getElementById(id)?.addEventListener('input',()=>formDirty=true);
-});
-['f-junta','f-status'].forEach(id=>{
-  document.getElementById(id)?.addEventListener('change',()=>formDirty=true);
-});
+['f-nombre','f-colonia','f-contrato','f-inicio','f-termino','f-longitud','f-area'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>formDirty=true));
+['f-junta','f-status'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>formDirty=true));
 
-// image
 const imgDrop=document.getElementById('img-drop');
 const imgFile=document.getElementById('f-img-file');
 imgDrop.addEventListener('click',()=>imgFile.click());
@@ -843,7 +752,7 @@ function processImg(file){
   r.onload=e=>{
     const img=new Image();
     img.onload=()=>{
-      if(img.width<800){err.textContent=`Ancho ${img.width}px — menor al mínimo recomendado (800px).`;err.style.display='block';}
+      if(img.width<800){err.textContent=`Ancho ${img.width}px — menor al recomendado (800px).`;err.style.display='block';}
       currentImgBase64=e.target.result;
       document.getElementById('img-prev').src=e.target.result;
       document.getElementById('img-prev-wrap').style.display='block';
@@ -864,7 +773,8 @@ function openModal(id){
   if(!isEditor) return;
   editId=id||null; formDirty=false;
   const o=id?obras.find(x=>x.id===id):null;
-  currentTramo=o?.tramo?JSON.parse(JSON.stringify(o.tramo)):[];
+  // currentTramo siempre en formato [[lat,lng]] internamente
+  currentTramo = o?.tramo ? parseTramo(o.tramo) : [];
   currentImgBase64=o?.img||'';
   document.getElementById('modal-title').textContent=id?'Editar Obra':'Nueva Obra';
   document.getElementById('btn-delete').style.display=id?'':'none';
@@ -893,7 +803,7 @@ function openModal(id){
   if(currentImgBase64){document.getElementById('img-prev').src=currentImgBase64;document.getElementById('img-prev-wrap').style.display='block';imgDrop.style.display='none';}
   else clearImg();
   document.getElementById('overlay-obra').classList.add('open');
-  document.getElementById('modal-obra').scrollTop=0;
+  document.getElementById('overlay-obra').querySelector('.modal').scrollTop=0;
 }
 
 function tryClose(){
@@ -918,8 +828,7 @@ document.getElementById('btn-add').onclick=()=>openModal();
 
 document.getElementById('btn-delete').onclick=async()=>{
   if(!editId||!confirm('¿Eliminar esta obra permanentemente?')) return;
-  await deleteObraFS(editId);
-  formDirty=false; closeModal();
+  await deleteObraFS(editId); formDirty=false; closeModal();
 };
 
 document.getElementById('btn-save').onclick=async()=>{
@@ -930,11 +839,6 @@ document.getElementById('btn-save').onclick=async()=>{
   if(isNaN(lat)||isNaN(lng)){alert('Selecciona la ubicación del pin.');return;}
   const catId=document.getElementById('f-tipo').value;
   const cat=getCat(catId);
-  // Siempre convertir tramo a objetos {lat,lng} antes de guardar
-  const tramoSeguro = (cat.vial ? currentTramo : []).map(p =>
-    Array.isArray(p) ? {lat: p[0], lng: p[1]} : {lat: p.lat, lng: p.lng}
-  );
-
   const o={
     id:editId||String(Date.now()),
     nombre:nom,
@@ -948,7 +852,7 @@ document.getElementById('btn-save').onclick=async()=>{
     img:currentImgBase64, lat, lng,
     longitud:cat.vial?parseFloat(document.getElementById('f-longitud').value)||null:null,
     area:cat.vial?parseFloat(document.getElementById('f-area').value)||null:null,
-    tramo: tramoSeguro
+    tramo:cat.vial?currentTramo:[]  // [[lat,lng]] — tramoToFirestore lo convierte al guardar
   };
   formDirty=false;
   await saveObra(o);
@@ -978,8 +882,8 @@ function updateTraceBar(){
   const n=pendingTrace.length;
   document.getElementById('map-mode-bar').innerHTML=
     `<span>✏️ <b>${n} punto${n!==1?'s':''}</b> — Clic para continuar</span>
-    <button class="btn-green" id="td-fin" style="margin-left:8px">✔ Finalizar</button>
-    <button class="btn-orange" id="td-und" style="margin-left:4px">↩ Deshacer</button>
+    <button class="btn-grn" id="td-fin" style="margin-left:8px">✔ Finalizar</button>
+    <button class="btn-org" id="td-und" style="margin-left:4px">↩ Deshacer</button>
     <button class="btn-sec" id="td-can" style="margin-left:4px;font-size:11px;padding:5px 10px">✕ Cancelar</button>`;
   document.getElementById('td-fin').onclick=()=>stopTrace(true);
   document.getElementById('td-und').onclick=undoTrace;
@@ -994,7 +898,8 @@ function undoTrace(){
   updateTraceBar();
 }
 function startTrace(){
-  traceMode=true; pendingTrace=JSON.parse(JSON.stringify(currentTramo));
+  traceMode=true;
+  pendingTrace=JSON.parse(JSON.stringify(currentTramo)); // [[lat,lng]]
   document.getElementById('overlay-obra').classList.remove('open');
   const bar=document.getElementById('map-mode-bar'); bar.className='trace';
   map.getContainer().style.cursor='crosshair'; map.doubleClickZoom.disable();
@@ -1041,11 +946,9 @@ function renderPinsGrid(){
 }
 
 async function deleteCat(id){
-  if(obras.some(o=>o.catId===id)){alert('Esta categoría está en uso. Reasigna esas obras primero.');return;}
+  if(obras.some(o=>o.catId===id)){alert('Categoría en uso. Reasigna las obras primero.');return;}
   if(!confirm('¿Eliminar esta categoría?')) return;
-  await deleteCatFS(id);
-  cats=cats.filter(c=>c.id!==id);
-  buildTipoSelect(); renderPinsGrid(); renderAll();
+  await deleteCatFS(id); cats=cats.filter(c=>c.id!==id); buildTipoSelect(); renderPinsGrid(); renderAll();
 }
 
 function openPinEdit(id){
@@ -1132,9 +1035,7 @@ function initMap(){
       tmpMk=L.marker([lat,lng]).addTo(map);
       setPickMode(false);
       document.getElementById('overlay-obra').classList.add('open');
-      formDirty=true;
-      geoDetect(lat,lng);
-      return;
+      formDirty=true; geoDetect(lat,lng); return;
     }
     if(traceMode){
       const pt=[e.latlng.lat,e.latlng.lng];
