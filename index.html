@@ -526,8 +526,26 @@ async function deleteCatFS(id){
   await savingShow(async()=>{ await deleteDoc(doc(db,'categorias',id)); });
 }
 async function checkEditor(uid){
-  try{ const d=await getDoc(doc(db,'editores',uid)); return d.exists()&&d.data().activo===true; }
-  catch{ return false; }
+  try{
+    const d=await getDoc(doc(db,'editores',uid));
+    if(d.exists()){
+      const data=d.data();
+      // acepta tanto true (boolean) como "true" (string) por si acaso
+      return data.activo===true || data.activo==='true';
+    }
+    return false;
+  } catch(e){
+    console.warn('Error verificando editor:', e);
+    // Si Firebase falla temporalmente, reintenta una vez después de 2s
+    return new Promise(resolve=>{
+      setTimeout(async()=>{
+        try{
+          const d2=await getDoc(doc(db,'editores',uid));
+          resolve(d2.exists()&&(d2.data().activo===true||d2.data().activo==='true'));
+        } catch{ resolve(false); }
+      }, 2000);
+    });
+  }
 }
 
 // ── AUTH ──
