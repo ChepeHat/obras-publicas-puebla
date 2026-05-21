@@ -364,7 +364,7 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 <!-- FIREBASE + APP -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -552,22 +552,32 @@ async function checkEditor(uid){
 const provider = new GoogleAuthProvider();
 
 async function loginWithGoogle(){
+  const errEl=document.getElementById('login-error');
+  errEl.style.display='none';
   try{
-    document.getElementById('login-error').style.display='none';
-    await signInWithRedirect(auth, provider);
+    provider.setCustomParameters({prompt:'select_account'});
+    const result = await signInWithPopup(auth, provider);
+    console.log('Login OK:', result.user.email);
   } catch(e){
-    document.getElementById('login-error').textContent='Error al iniciar sesión. Intenta de nuevo.';
-    document.getElementById('login-error').style.display='block';
+    console.error('Login error:', e.code, e.message);
+    if(e.code==='auth/popup-blocked'){
+      errEl.textContent='El navegador bloqueó la ventana. Permite popups para este sitio e intenta de nuevo.';
+    } else if(e.code==='auth/popup-closed-by-user'){
+      errEl.textContent='Cerraste la ventana antes de completar el login.';
+    } else if(e.code==='auth/unauthorized-domain'){
+      errEl.textContent='Dominio no autorizado en Firebase. Contacta al administrador.';
+    } else {
+      errEl.textContent='Error: '+e.message;
+    }
+    errEl.style.display='block';
   }
 }
 
 function openLoginModal(){ document.getElementById('overlay-login').classList.add('open'); }
 function closeLoginModal(){ document.getElementById('overlay-login').classList.remove('open'); }
 
-// Handle redirect result on page load — runs before onAuthStateChanged
-getRedirectResult(auth).then(async result=>{
-  if(result?.user) console.log('Redirect OK:', result.user.email);
-}).catch(e=>console.error('Redirect error:',e));
+// Handle redirect result — kept as fallback
+getRedirectResult(auth).catch(e=>console.warn('Redirect result error:',e));
 
 onAuthStateChanged(auth, async user=>{
   if(user){
