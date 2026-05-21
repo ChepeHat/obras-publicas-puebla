@@ -734,12 +734,13 @@ function renderMarkers(){
   filtered().forEach(o=>{
     const cat=getCat(o.catId);
     if(o.tramo&&o.tramo.length>=2){
-      const pl=L.polyline(o.tramo,{color:cat.color,weight:6,opacity:.85,lineJoin:'round',lineCap:'round'}).addTo(map);
+      const tramoLatLng = parseTramo(o.tramo);
+      const pl=L.polyline(tramoLatLng,{color:cat.color,weight:6,opacity:.85,lineJoin:'round',lineCap:'round'}).addTo(map);
       if(o.status==='proyectada') pl.setStyle({dashArray:'10 6'});
       pl.bindPopup(L.popup({maxWidth:280,minWidth:268}).setContent(buildCard(o)));
       pl.on('popupopen',()=>attachPopupEvents(o.id));
       polylines[o.id]=pl;
-      const mid=o.tramo[Math.floor(o.tramo.length/2)];
+      const mid=tramoLatLng[Math.floor(tramoLatLng.length/2)];
       labelMarkers[o.id]=L.marker(mid,{icon:L.divIcon({
         html:`<div class="obra-label-inner" style="color:${cat.color}">${o.contrato||o.nombre}</div>`,
         className:'obra-label',iconAnchor:[0,8]}),interactive:false,zIndexOffset:-100}).addTo(map);
