@@ -369,7 +369,7 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 <!-- FIREBASE + APP -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -539,14 +539,20 @@ async function checkEditor(uid){
 const provider = new GoogleAuthProvider();
 
 async function loginWithGoogle(){
-  try{
-    const result = await signInWithPopup(auth, provider);
-    return result.user;
-  } catch(e){
-    document.getElementById('login-error').textContent='Error al iniciar sesión. Intenta de nuevo.';
+  try{ await signInWithRedirect(auth, provider); }
+  catch(e){ console.error(e);
+    document.getElementById('login-error').textContent='Error al iniciar sesión.';
     document.getElementById('login-error').style.display='block';
   }
 }
+
+// Handle redirect result on page load
+getRedirectResult(auth).then(async result=>{
+  if(result?.user){
+    // Auth state listener will handle the rest
+    console.log('Redirect login exitoso:', result.user.email);
+  }
+}).catch(e=>{ console.error('Redirect error:', e); });
 
 onAuthStateChanged(auth, async user=>{
   if(user){
