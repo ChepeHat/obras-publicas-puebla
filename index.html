@@ -584,7 +584,8 @@ onAuthStateChanged(auth, async user=>{
     closeLoginModal();
     const editorOk = await checkEditor(user.uid);
     isEditor=editorOk;
-    document.getElementById('login-screen').classList.add('hidden');
+    console.log('Es editor:', editorOk, 'UID:', user.uid);
+
     // header
     document.getElementById('user-info').style.display='flex';
     document.getElementById('user-avatar').src=user.photoURL||'';
