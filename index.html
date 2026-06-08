@@ -1051,9 +1051,10 @@ document.getElementById('overlay-pins').onclick=e=>{if(e.target.id==='overlay-pi
 function initMap(){
   map=L.map('map',{center:[19.000,-98.200],zoom:13});
   // Stadia Alidade Smooth — mapa minimalista gris claro
-  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     maxZoom: 20,
-    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    subdomains: 'abcd',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
   }).addTo(map);
   map.on('click',e=>{
     if(pickMode){
