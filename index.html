@@ -12,11 +12,32 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 #mode-badge{position:fixed;bottom:12px;left:10px;z-index:1000;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;pointer-events:none}
 #mode-badge.viewer{background:rgba(0,0,0,.55);color:#fff}
 #mode-badge.editor{background:#2E7D32;color:#fff}
-/* Map style toggle */
-#map-style-btn{position:absolute;bottom:90px;left:10px;z-index:1000;width:60px;height:60px;border:2px solid #fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer;overflow:hidden;padding:0;background:none}
+#map-style-btn{position:absolute;bottom:130px;left:10px;z-index:1000;width:60px;height:60px;border:2px solid #fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer;overflow:hidden;padding:0;background:none}
 #map-style-btn img{width:100%;height:100%;object-fit:cover;display:block}
 #map-style-btn span{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:700;text-align:center;padding:2px 0;letter-spacing:.4px}
-/* Header */
+/* Layers panel button */
+#btn-layers-map{position:absolute;bottom:200px;left:10px;z-index:1000;width:60px;height:60px;border:2px solid #fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px;font-weight:700;color:#4a1942}
+#btn-layers-map span{font-size:18px;line-height:1}
+/* Layers panel */
+#layers-panel{position:absolute;bottom:200px;left:80px;z-index:1000;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.2);padding:12px;min-width:200px;display:none}
+#layers-panel.open{display:block}
+#layers-panel h3{font-size:11px;font-weight:700;color:#4a1942;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;border-bottom:1px solid #eee;padding-bottom:6px}
+.layer-item{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;font-size:12px;color:#333}
+.layer-item input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:#4a1942}
+.layer-dot{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+.layer-upload{margin-top:8px;border-top:1px solid #eee;padding-top:8px}
+.layer-upload label{font-size:10px;color:#888;display:block;margin-bottom:4px}
+.layer-upload-btn{background:#f5edf4;border:1.5px dashed #7b2d72;color:#7b2d72;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;width:100%;text-align:center}
+.layer-upload-btn:hover{background:#eeddee}
+/* Location search */
+#loc-search-btn{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:#fff;border:none;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.2);padding:0;overflow:hidden;display:flex;align-items:center;height:36px}
+#loc-search-input{border:none;outline:none;padding:0 12px;font-size:13px;width:260px;color:#333;background:transparent}
+#loc-search-input::placeholder{color:#aaa}
+#loc-search-go{background:#4a1942;color:#fff;border:none;height:100%;padding:0 14px;cursor:pointer;font-size:12px;font-weight:600}
+#loc-search-go:hover{background:#6b2862}
+#loc-results{position:absolute;top:54px;left:50%;transform:translateX(-50%);z-index:1000;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.2);width:320px;max-height:200px;overflow-y:auto;display:none}
+.loc-result-item{padding:9px 14px;font-size:12px;cursor:pointer;border-bottom:1px solid #f5f5f5;color:#333}
+.loc-result-item:hover{background:#f5edf4;color:#4a1942}
 #header{background:#4a1942;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
 #header h1{font-size:14px;font-weight:600}
 #header p{font-size:10px;opacity:.6;margin-top:1px}
@@ -44,13 +65,11 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 #map{flex:1;min-width:0;position:relative}
 #panel{width:290px;background:#fff;border-left:1px solid #e0e0e0;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden}
 #panel-header{padding:10px 12px;border-bottom:1px solid #eee;font-size:13px;font-weight:600;color:#4a1942;background:#fdf8fd;flex-shrink:0}
-/* Panel grouping toolbar */
 #panel-toolbar{padding:6px 10px;border-bottom:1px solid #eee;display:flex;gap:5px;align-items:center;background:#fafafa;flex-shrink:0}
 #panel-toolbar span{font-size:10px;color:#aaa;font-weight:600;margin-right:2px}
 .group-btn{border:1.5px solid #ddd;background:#fff;padding:3px 9px;border-radius:20px;font-size:10px;cursor:pointer;font-weight:600;color:#666;transition:all .15s}
 .group-btn.active{background:#4a1942;color:#fff;border-color:#4a1942}
 #obra-list{flex:1;overflow-y:auto}
-/* Groups */
 .group-section{border-bottom:1px solid #f0f0f0}
 .group-header{padding:8px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;position:sticky;top:0;background:#fff;z-index:2;border-bottom:1px solid #eee}
 .group-header:hover{background:#fdf5fc}
@@ -68,7 +87,6 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 .obra-item-badges{display:flex;gap:4px;flex-wrap:wrap}
 .badge{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600}
 .empty{padding:40px 16px;text-align:center;color:#aaa;font-size:13px}
-/* Modals */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center}
 .overlay.open{display:flex}
 .modal{background:#fff;border-radius:12px;max-width:96vw;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
@@ -100,13 +118,15 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 #vial-fields{display:none;flex-direction:column;gap:11px}
 #vial-fields.show{display:flex}
 .trace-box{background:#E8F5E9;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.toggle-row{display:flex;align-items:center;gap:10px;background:#FFF8E1;border-radius:8px;padding:10px 12px;border:1.5px solid #FFE082}
+.toggle-row label{font-size:12px;font-weight:600;color:#555;cursor:pointer;display:flex;align-items:center;gap:8px}
+.toggle-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:#4a1942}
 .btn-sec{background:#fff;border:1.5px solid #ccc;padding:7px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;color:#333}
 .btn-pri{background:#4a1942;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600}
 .btn-del{background:#c62828;color:#fff;border:none;padding:7px 13px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600;margin-right:auto}
 .btn-grn{background:#2E7D32;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
 .btn-org{background:#E65100;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
 .btn-warn{background:#F57F17;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600}
-/* Pin editor */
 #pins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:12px}
 .pin-card{border:2px solid #eee;border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
 .pin-card:hover{border-color:#7b2d72;background:#fdf5fc}
@@ -123,7 +143,6 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 .color-swatch.active{border-color:#222;transform:scale(1.2)}
 .icon-drop{border:2px dashed #ccc;border-radius:8px;padding:10px;text-align:center;cursor:pointer;background:#fff;font-size:11px;color:#888}
 .icon-drop:hover{border-color:#4a1942;color:#4a1942}
-/* Popup card */
 .leaflet-popup-content-wrapper{border-radius:14px!important;padding:0!important;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.25)!important}
 .leaflet-popup-content{margin:0!important;width:268px!important;min-width:268px!important}
 .leaflet-popup-tip-container{display:none}
@@ -151,7 +170,6 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 .obra-label{background:transparent;border:none;box-shadow:none}
 .obra-label-inner{background:rgba(255,255,255,.92);border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 #saving{position:fixed;top:52px;right:12px;background:#1B5E20;color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;z-index:5000;display:none}
-/* Responsive */
 @media(max-width:768px){
   #header p,#user-name{display:none}
   #header-btns .hbtn{padding:5px 8px;font-size:10px}
@@ -165,7 +183,9 @@ body{display:flex;flex-direction:column;background:#f0ede8}
   .overlay{align-items:flex-end!important}
   #btn-add,#btn-pins,.c-actions{display:none!important}
   #mode-badge{bottom:calc(40vh + 8px)}
-  #map-style-btn{bottom:calc(40vh + 12px)}
+  #map-style-btn{bottom:calc(40vh + 70px)}
+  #btn-layers-map{bottom:calc(40vh + 140px)}
+  #loc-search-input{width:160px}
 }
 </style>
 </head>
@@ -193,7 +213,14 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 </div>
 
 <div id="main">
-  <div id="map"></div>
+  <div id="map">
+    <!-- Location search -->
+    <div id="loc-search-btn">
+      <input id="loc-search-input" type="text" placeholder="Buscar dirección o colonia…"/>
+      <button id="loc-search-go">Ir</button>
+    </div>
+    <div id="loc-results"></div>
+  </div>
   <div id="panel">
     <div id="panel-header">Obras <span id="count" style="color:#aaa;font-weight:400"></span></div>
     <div id="panel-toolbar">
@@ -206,7 +233,7 @@ body{display:flex;flex-direction:column;background:#f0ede8}
   </div>
 </div>
 
-<!-- LOGIN MODAL -->
+<!-- LOGIN -->
 <div class="overlay" id="overlay-login">
   <div class="modal" style="width:360px">
     <div style="background:linear-gradient(135deg,#4a1942,#7b2d72);padding:28px 24px 20px;text-align:center;border-radius:12px 12px 0 0">
@@ -247,16 +274,29 @@ body{display:flex;flex-direction:column;background:#f0ede8}
   <div class="modal-body">
     <div class="sec">Datos generales</div>
     <div class="fg"><label>Nombre de la obra</label><input id="f-nombre" type="text" placeholder="Ej: Boulevard Apulco"/></div>
-    <div class="sec">Ubicación del pin</div>
-    <div class="fg">
-      <div style="display:flex;gap:8px;align-items:center">
-        <input id="f-lat" type="number" step="any" placeholder="Latitud" style="flex:1"/>
-        <input id="f-lng" type="number" step="any" placeholder="Longitud" style="flex:1"/>
-        <button class="btn-sec" id="btn-pick" style="font-size:11px;padding:7px 10px;white-space:nowrap">📍 Clic en mapa</button>
-      </div>
-      <span class="hint">Coloca el pin primero — detecta colonia y junta automáticamente.</span>
+
+    <!-- Función 4: ocultar pin -->
+    <div class="toggle-row">
+      <label>
+        <input type="checkbox" id="f-show-pin" checked/>
+        Mostrar pin en el mapa
+      </label>
+      <span style="font-size:10px;color:#888;flex:1">Desactiva si la obra es itinerante o tiene múltiples puntos</span>
     </div>
-    <div id="geo-status" class="geo-badge"></div>
+
+    <div id="pin-location-fields">
+      <div class="sec">Ubicación del pin</div>
+      <div class="fg">
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="f-lat" type="number" step="any" placeholder="Latitud" style="flex:1"/>
+          <input id="f-lng" type="number" step="any" placeholder="Longitud" style="flex:1"/>
+          <button class="btn-sec" id="btn-pick" style="font-size:11px;padding:7px 10px;white-space:nowrap">📍 Clic en mapa</button>
+        </div>
+        <span class="hint">Coloca el pin primero — detecta colonia y junta automáticamente.</span>
+      </div>
+      <div id="geo-status" class="geo-badge"></div>
+    </div>
+
     <div class="form-row">
       <div class="fg"><label>Colonia / Barrio <span id="geo-col-ico"></span></label><input id="f-colonia" type="text" placeholder="Se detecta automáticamente"/></div>
       <div class="fg"><label>Junta Auxiliar <span id="geo-jun-ico"></span></label>
@@ -378,6 +418,8 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
@@ -385,21 +427,11 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const firebaseConfig = {
-  apiKey:"AIzaSyA7Pk8IwoR45PmUUvIHWxb6cpU9rSh1Sgs",
-  authDomain:"obras-publicas-puebla.firebaseapp.com",
-  projectId:"obras-publicas-puebla",
-  storageBucket:"obras-publicas-puebla.firebasestorage.app",
-  messagingSenderId:"1040966007077",
-  appId:"1:1040966007077:web:956b2ee0cde6aa63c202cc"
-};
-const CLOUDINARY_CLOUD='dh5g9jnze', CLOUDINARY_PRESET='obras_puebla';
+const firebaseConfig={apiKey:"AIzaSyA7Pk8IwoR45PmUUvIHWxb6cpU9rSh1Sgs",authDomain:"obras-publicas-puebla.firebaseapp.com",projectId:"obras-publicas-puebla",storageBucket:"obras-publicas-puebla.firebasestorage.app",messagingSenderId:"1040966007077",appId:"1:1040966007077:web:956b2ee0cde6aa63c202cc"};
+const CLOUDINARY_CLOUD='dh5g9jnze',CLOUDINARY_PRESET='obras_puebla';
 const CLOUDINARY_URL=`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
-
 const fbApp=initializeApp(firebaseConfig);
-const auth=getAuth(fbApp);
-const db=getFirestore(fbApp);
-const provider=new GoogleAuthProvider();
+const auth=getAuth(fbApp),db=getFirestore(fbApp),provider=new GoogleAuthProvider();
 
 const ICON_GEAR='data:image/svg+xml;base64,'+btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94zM12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>');
 const ICON_CHECK='data:image/svg+xml;base64,'+btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
@@ -407,18 +439,21 @@ const PRESET_COLORS=['#E65100','#4527A0','#0D47A1','#006064','#1B5E20','#B71C1C'
 const ST_COL={proyectada:'#E67E22',proceso:'#1565C0',terminada:'#2E7D32'};
 const ST_LBL={proyectada:'Proyectada',proceso:'En proceso',terminada:'Terminada'};
 const DEFAULT_CATS=[
-  {id:'c1',name:'Pavimentación',color:'#E65100',icon:'',vial:true},
-  {id:'c2',name:'Rehabilitación Vial',color:'#4527A0',icon:'',vial:true},
-  {id:'c3',name:'Mantenimiento Vial',color:'#0D47A1',icon:'',vial:true},
-  {id:'c4',name:'Hidrosanitarias',color:'#006064',icon:'',vial:false},
-  {id:'c5',name:'Educativas',color:'#1B5E20',icon:'',vial:false},
-  {id:'c6',name:'Parques/Espacios',color:'#2E7D32',icon:'',vial:false},
-  {id:'c7',name:'Bacheo Frío',color:'#37474F',icon:'',vial:true},
-  {id:'c8',name:'Movilidad',color:'#1565C0',icon:'',vial:false},
-  {id:'c9',name:'DIF Municipal',color:'#880E4F',icon:'',vial:false},
-  {id:'c10',name:'Electrificación',color:'#F57F17',icon:'',vial:false},
-  {id:'c11',name:'Edificación',color:'#4E342E',icon:'',vial:false},
-  {id:'c12',name:'Otras Obras',color:'#546E7A',icon:'',vial:false}
+  {id:'c1',name:'Pavimentación',color:'#E65100',icon:'',vial:true},{id:'c2',name:'Rehabilitación Vial',color:'#4527A0',icon:'',vial:true},
+  {id:'c3',name:'Mantenimiento Vial',color:'#0D47A1',icon:'',vial:true},{id:'c4',name:'Hidrosanitarias',color:'#006064',icon:'',vial:false},
+  {id:'c5',name:'Educativas',color:'#1B5E20',icon:'',vial:false},{id:'c6',name:'Parques/Espacios',color:'#2E7D32',icon:'',vial:false},
+  {id:'c7',name:'Bacheo Frío',color:'#37474F',icon:'',vial:true},{id:'c8',name:'Movilidad',color:'#1565C0',icon:'',vial:false},
+  {id:'c9',name:'DIF Municipal',color:'#880E4F',icon:'',vial:false},{id:'c10',name:'Electrificación',color:'#F57F17',icon:'',vial:false},
+  {id:'c11',name:'Edificación',color:'#4E342E',icon:'',vial:false},{id:'c12',name:'Otras Obras',color:'#546E7A',icon:'',vial:false}
+];
+
+// ── Municipio de Puebla boundary (simplified polygon) ──
+const PUEBLA_BOUNDS=[
+  [19.1850,-98.2800],[19.1900,-98.1800],[19.1700,-98.0800],[19.1400,-98.0200],
+  [19.1000,-97.9800],[19.0500,-97.9600],[18.9800,-97.9800],[18.9200,-98.0200],
+  [18.8800,-98.0800],[18.8600,-98.1500],[18.8700,-98.2200],[18.9000,-98.2800],
+  [18.9500,-98.3200],[19.0000,-98.3400],[19.0600,-98.3300],[19.1100,-98.3100],
+  [19.1500,-98.3000],[19.1850,-98.2800]
 ];
 
 let cats=[],obras=[],markers={},polylines={},labelMarkers={};
@@ -427,9 +462,9 @@ let pickMode=false,traceMode=false,tmpMk=null;
 let currentTramo=[],pendingTrace=[],livePolyline=null,traceMarkers=[];
 let filt='todas',q='',currentImgBase64='',formDirty=false;
 let editingCatId=null,currentPinColor='#E65100',currentPinIcon='';
-let groupMode='none'; // 'none' | 'cat' | 'year'
-let collapsedGroups=new Set();
-let map, TILES, currentStyle='carto';
+let groupMode='none',collapsedGroups=new Set();
+let map,TILES,currentStyle='carto';
+let kmzLayers={},municipioBoundary=null;
 
 // ── HELPERS ──
 const fmt=d=>{if(!d)return'--';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y.slice(2)}`;};
@@ -439,35 +474,23 @@ const getCat=id=>cats.find(c=>c.id===id)||{id:'',color:'#888',icon:'',name:'—'
 const showSaving=()=>{const s=document.getElementById('saving');s.style.display='block';setTimeout(()=>s.style.display='none',2000);};
 const getYear=o=>{const d=o.inicio||o.termino||'';return d?d.slice(0,4):'Sin año';};
 
-// ── TRAMO ──
-function parseTramo(tramo){
-  if(!tramo||!tramo.length)return[];
-  return tramo.map(p=>Array.isArray(p)?[p[0],p[1]]:[p.lat,p.lng]);
-}
+function parseTramo(tramo){if(!tramo||!tramo.length)return[];return tramo.map(p=>Array.isArray(p)?[p[0],p[1]]:[p.lat,p.lng]);}
 function tramoToFirestore(tramo){
-  if(!tramo||!tramo.length)return[];
-  let pts=tramo;
+  if(!tramo||!tramo.length)return[];let pts=tramo;
   if(pts.length>60){const step=Math.ceil(pts.length/60);pts=pts.filter((_,i)=>i%step===0);if(pts[pts.length-1]!==tramo[tramo.length-1])pts.push(tramo[tramo.length-1]);}
   return pts.map(p=>Array.isArray(p)?{lat:Math.round(p[0]*1e6)/1e6,lng:Math.round(p[1]*1e6)/1e6}:{lat:Math.round(p.lat*1e6)/1e6,lng:Math.round(p.lng*1e6)/1e6});
 }
 
-// ── PIN SVG ──
 function pinSvg(color,catIcon,statusIcon,size=38){
   const h=Math.round(size*1.26),cx=size/2,cy=size/2,bodyR=size*0.32,innerR=size*0.20;
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${h}" viewBox="0 0 ${size} ${h}">
-    <path d="M${cx} 0C${size*.22} 0 0 ${size*.22} 0 ${cy}c0 ${size*.36} ${cx} ${h*0.6} ${cx} ${h*0.6}S${size} ${cy+size*.36} ${size} ${cy}C${size} ${size*.22} ${size*.78} 0 ${cx} 0z" fill="${color}"/>
-    <circle cx="${cx}" cy="${cy}" r="${bodyR}" fill="white" opacity="0.92"/>`;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${h}" viewBox="0 0 ${size} ${h}"><path d="M${cx} 0C${size*.22} 0 0 ${size*.22} 0 ${cy}c0 ${size*.36} ${cx} ${h*0.6} ${cx} ${h*0.6}S${size} ${cy+size*.36} ${size} ${cy}C${size} ${size*.22} ${size*.78} 0 ${cx} 0z" fill="${color}"/><circle cx="${cx}" cy="${cy}" r="${bodyR}" fill="white" opacity="0.92"/>`;
   if(catIcon){const r=innerR*.9;svg+=`<image href="${catIcon}" x="${cx-r}" y="${cy-r}" width="${r*2}" height="${r*2}"/>`;}
   else svg+=`<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="${color}"/>`;
-  if(statusIcon){const bx=cx+bodyR*.6,by=cy+bodyR*.6,br=bodyR*.42;
-    svg+=`<circle cx="${bx}" cy="${by}" r="${br}" fill="${color}"/><image href="${statusIcon}" x="${bx-br*.85}" y="${by-br*.85}" width="${br*1.7}" height="${br*1.7}"/>`;}
+  if(statusIcon){const bx=cx+bodyR*.6,by=cy+bodyR*.6,br=bodyR*.42;svg+=`<circle cx="${bx}" cy="${by}" r="${br}" fill="${color}"/><image href="${statusIcon}" x="${bx-br*.85}" y="${by-br*.85}" width="${br*1.7}" height="${br*1.7}"/>`;}
   return svg+'</svg>';
 }
 const stIcon=s=>s==='proceso'?ICON_GEAR:s==='terminada'?ICON_CHECK:null;
-const mkLeafletIcon=(status,catId)=>{
-  const cat=getCat(catId);
-  return L.divIcon({html:pinSvg(cat.color,cat.icon||'',stIcon(status),38),className:'',iconSize:[38,48],iconAnchor:[19,48],popupAnchor:[0,-50]});
-};
+const mkLeafletIcon=(status,catId)=>{const cat=getCat(catId);return L.divIcon({html:pinSvg(cat.color,cat.icon||'',stIcon(status),38),className:'',iconSize:[38,48],iconAnchor:[19,48],popupAnchor:[0,-50]});};
 
 // ── FIRESTORE ──
 async function loadCats(){
@@ -476,32 +499,14 @@ async function loadCats(){
   else cats=snap.docs.map(d=>({id:d.id,...d.data()}));
   buildTipoSelect();
 }
-function subscribeObras(){
-  onSnapshot(collection(db,'obras'),snap=>{obras=snap.docs.map(d=>({id:d.id,...d.data()}));renderAll();});
-}
+function subscribeObras(){onSnapshot(collection(db,'obras'),snap=>{obras=snap.docs.map(d=>({id:d.id,...d.data()}));renderAll();});}
 async function checkEditor(uid){
   try{const d=await getDoc(doc(db,'editores',uid));if(d.exists()){const data=d.data();return data.activo===true||data.activo==='true';}return false;}
-  catch(e){return new Promise(r=>{setTimeout(async()=>{try{const d2=await getDoc(doc(db,'editores',uid));r(d2.exists()&&d2.data().activo===true);}catch{r(false);}},2000);});}
-}
-
-// ── IMAGE ──
-function compressImage(base64,maxW=1200,quality=0.78){
-  return new Promise(resolve=>{const img=new Image();img.onload=()=>{const scale=Math.min(1,maxW/img.width),w=Math.round(img.width*scale),h=Math.round(img.height*scale),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);resolve(c.toDataURL('image/jpeg',quality));};img.src=base64;});
-}
-async function uploadToCloudinary(base64){
-  if(!base64)return'';
-  if(base64.startsWith('http'))return base64;
-  const compressed=await compressImage(base64);
-  const blob=await fetch(compressed).then(r=>r.blob());
-  const fd=new FormData();fd.append('file',blob);fd.append('upload_preset',CLOUDINARY_PRESET);fd.append('folder','obras_puebla');
-  const res=await fetch(CLOUDINARY_URL,{method:'POST',body:fd});
-  if(!res.ok)throw new Error('Cloudinary error');
-  return(await res.json()).secure_url;
+  catch{return new Promise(r=>{setTimeout(async()=>{try{const d2=await getDoc(doc(db,'editores',uid));r(d2.exists()&&d2.data().activo===true);}catch{r(false);}},2000);});}
 }
 async function saveObra(o){
-  showSaving();
-  let imgUrl='';
-  try{imgUrl=await uploadToCloudinary(o.img);}catch(e){imgUrl=o.img?.startsWith('http')?o.img:'';}
+  showSaving();let imgUrl='';
+  try{imgUrl=await uploadToCloudinary(o.img);}catch{imgUrl=o.img?.startsWith('http')?o.img:'';}
   const obraToSave={...o,img:imgUrl,tramo:tramoToFirestore(o.tramo||[])};
   console.log('Guardando obra, tramo puntos:',obraToSave.tramo.length);
   await setDoc(doc(db,'obras',o.id),obraToSave);
@@ -510,11 +515,21 @@ async function deleteObraFS(id){showSaving();await deleteDoc(doc(db,'obras',id))
 async function saveCatFS(c){showSaving();await setDoc(doc(db,'categorias',c.id),c);}
 async function deleteCatFS(id){showSaving();await deleteDoc(doc(db,'categorias',id));}
 
+// ── IMAGE ──
+function compressImage(b,maxW=1200,q=.78){return new Promise(r=>{const i=new Image();i.onload=()=>{const s=Math.min(1,maxW/i.width),w=Math.round(i.width*s),h=Math.round(i.height*s),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);r(c.toDataURL('image/jpeg',q));};i.src=b;});}
+async function uploadToCloudinary(base64){
+  if(!base64)return'';if(base64.startsWith('http'))return base64;
+  const compressed=await compressImage(base64),blob=await fetch(compressed).then(r=>r.blob());
+  const fd=new FormData();fd.append('file',blob);fd.append('upload_preset',CLOUDINARY_PRESET);fd.append('folder','obras_puebla');
+  const res=await fetch(CLOUDINARY_URL,{method:'POST',body:fd});if(!res.ok)throw new Error('Cloudinary error');
+  return(await res.json()).secure_url;
+}
+
 // ── AUTH ──
 async function loginWithGoogle(){
   const errEl=document.getElementById('login-error');errEl.style.display='none';
-  try{provider.setCustomParameters({prompt:'select_account'});const result=await signInWithPopup(auth,provider);console.log('Login OK:',result.user.email);}
-  catch(e){const msgs={'auth/popup-blocked':'El navegador bloqueó la ventana. Permite popups.','auth/popup-closed-by-user':'Cerraste la ventana antes de completar el login.','auth/unauthorized-domain':'Dominio no autorizado.'};errEl.textContent=msgs[e.code]||'Error: '+e.message;errEl.style.display='block';}
+  try{provider.setCustomParameters({prompt:'select_account'});const r=await signInWithPopup(auth,provider);console.log('Login OK:',r.user.email);}
+  catch(e){const msgs={'auth/popup-blocked':'El navegador bloqueó la ventana. Permite popups.','auth/popup-closed-by-user':'Cerraste la ventana.','auth/unauthorized-domain':'Dominio no autorizado.'};errEl.textContent=msgs[e.code]||'Error: '+e.message;errEl.style.display='block';}
 }
 const openLoginModal=()=>document.getElementById('overlay-login').classList.add('open');
 const closeLoginModal=()=>document.getElementById('overlay-login').classList.remove('open');
@@ -522,14 +537,14 @@ const closeLoginModal=()=>document.getElementById('overlay-login').classList.rem
 onAuthStateChanged(auth,async user=>{
   if(user){
     currentUser=user;closeLoginModal();
-    const editorOk=await checkEditor(user.uid);isEditor=editorOk;
-    console.log('Es editor:',editorOk,'UID:',user.uid);
+    const ok=await checkEditor(user.uid);isEditor=ok;
+    console.log('Es editor:',ok,'UID:',user.uid);
     document.getElementById('user-info').style.display='flex';
     document.getElementById('user-avatar').src=user.photoURL||'';
     document.getElementById('user-name').textContent=user.displayName?.split(' ')[0]||'';
     document.getElementById('btn-logout').style.display='';
     document.getElementById('btn-login-header').style.display='none';
-    if(isEditor){document.getElementById('btn-pins').style.display='';document.getElementById('btn-add').style.display='';document.getElementById('mode-badge').textContent='✏️ Modo editor';document.getElementById('mode-badge').className='editor';}
+    if(ok){document.getElementById('btn-pins').style.display='';document.getElementById('btn-add').style.display='';document.getElementById('mode-badge').textContent='✏️ Modo editor';document.getElementById('mode-badge').className='editor';}
     await loadCats();subscribeObras();
   } else {
     currentUser=null;isEditor=false;
@@ -543,7 +558,6 @@ onAuthStateChanged(auth,async user=>{
     await loadCats();subscribeObras();
   }
 });
-
 document.getElementById('btn-google-login').onclick=loginWithGoogle;
 document.getElementById('btn-login-header').onclick=openLoginModal;
 document.getElementById('login-cancel').onclick=closeLoginModal;
@@ -551,17 +565,12 @@ document.getElementById('overlay-login').onclick=e=>{if(e.target.id==='overlay-l
 document.getElementById('btn-logout').onclick=()=>signOut(auth);
 
 // ── TIPO SELECT ──
-function buildTipoSelect(){
-  const sel=document.getElementById('f-tipo'),prev=sel.value;sel.innerHTML='';
-  cats.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);});
-  if(prev)sel.value=prev;
-}
+function buildTipoSelect(){const sel=document.getElementById('f-tipo'),prev=sel.value;sel.innerHTML='';cats.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);});if(prev)sel.value=prev;}
 
-// ── GEO ──
+// ── GEO DETECT ──
 let geoTimer=null;
 function geoDetect(lat,lng){
-  const st=document.getElementById('geo-status');
-  st.textContent='🔍 Detectando colonia y junta…';st.className='geo-badge loading';
+  const st=document.getElementById('geo-status');st.textContent='🔍 Detectando…';st.className='geo-badge loading';
   clearTimeout(geoTimer);
   geoTimer=setTimeout(()=>{
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=es`,{headers:{'User-Agent':'ObrasPublicasPuebla/1.0'}})
@@ -569,8 +578,7 @@ function geoDetect(lat,lng){
         const a=data.address||{};
         const col=a.neighbourhood||a.suburb||a.quarter||a.residential||a.village||'';
         if(col&&!document.getElementById('f-colonia').value){document.getElementById('f-colonia').value=col;document.getElementById('geo-col-ico').textContent='📍';}
-        const match=matchJunta(a);
-        if(match){document.getElementById('f-junta').value=match;document.getElementById('geo-jun-ico').textContent='📍';}
+        const match=matchJunta(a);if(match){document.getElementById('f-junta').value=match;document.getElementById('geo-jun-ico').textContent='📍';}
         st.textContent='✅ Ubicación detectada';st.className='geo-badge ok';setTimeout(()=>{st.className='geo-badge';},3000);
       }).catch(()=>{st.textContent='⚠ No detectado';st.className='geo-badge err';setTimeout(()=>{st.className='geo-badge';},3000);});
   },600);
@@ -583,33 +591,52 @@ function matchJunta(a){
   return'';
 }
 
+// ── LOCATION SEARCH (Función 3) ──
+let locSearchTimer=null;
+document.getElementById('loc-search-input').addEventListener('keydown',e=>{if(e.key==='Enter')doLocSearch();});
+document.getElementById('loc-search-go').onclick=doLocSearch;
+
+function doLocSearch(){
+  const q=document.getElementById('loc-search-input').value.trim();
+  if(!q)return;
+  // Parse DMS format: 19° 3'17.34"N, 98°14'36.99"O
+  const dms=/(\d+)[°\s]+(\d+)['\s]+([0-9.]+)["\s]*([NSns])[,\s]+(\d+)[°\s]+(\d+)['\s]+([0-9.]+)["\s]*([OWow])/;
+  const m=q.match(dms);
+  if(m){
+    let lat=parseFloat(m[1])+parseFloat(m[2])/60+parseFloat(m[3])/3600;
+    if(/[Ss]/.test(m[4]))lat=-lat;
+    let lng=parseFloat(m[5])+parseFloat(m[6])/60+parseFloat(m[7])/3600;
+    if(/[OoWw]/.test(m[8]))lng=-lng;
+    flyTo(lat,lng);return;
+  }
+  // Plain decimal coords
+  const dec=/^(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)$/;
+  const d=q.match(dec);
+  if(d){flyTo(parseFloat(d[1]),parseFloat(d[2]));return;}
+  // Nominatim search
+  const res=document.getElementById('loc-results');
+  res.innerHTML='<div class="loc-result-item">Buscando…</div>';res.style.display='block';
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q+' Puebla México')}&limit=5`,{headers:{'User-Agent':'ObrasPublicasPuebla/1.0'}})
+    .then(r=>r.json()).then(data=>{
+      if(!data.length){res.innerHTML='<div class="loc-result-item" style="color:#aaa">Sin resultados</div>';return;}
+      res.innerHTML=data.map((item,i)=>`<div class="loc-result-item" data-i="${i}" data-lat="${item.lat}" data-lng="${item.lon}">${item.display_name}</div>`).join('');
+      res.querySelectorAll('.loc-result-item').forEach(el=>el.onclick=()=>{flyTo(parseFloat(el.dataset.lat),parseFloat(el.dataset.lng));res.style.display='none';document.getElementById('loc-search-input').value=el.textContent;});
+    }).catch(()=>{res.innerHTML='<div class="loc-result-item" style="color:#c62828">Error al buscar</div>';});
+}
+function flyTo(lat,lng){map.flyTo([lat,lng],17);L.marker([lat,lng],{icon:L.divIcon({html:'<div style="background:#4a1942;color:#fff;border-radius:4px;padding:2px 6px;font-size:11px;font-weight:700;white-space:nowrap">📍</div>',className:''})}).addTo(map).bindPopup(`${lat.toFixed(6)}, ${lng.toFixed(6)}`).openPopup();}
+document.addEventListener('click',e=>{if(!e.target.closest('#loc-search-btn')&&!e.target.closest('#loc-results'))document.getElementById('loc-results').style.display='none';});
+
 // ── CARD ──
 function buildCard(o){
   const cat=getCat(o.catId),sc=ST_COL[o.status]||'#888',sl=ST_LBL[o.status]||o.status;
   const imgH=o.img?`<img class="c-img" src="${o.img}" onerror="this.style.display='none'"/>`:`<div class="c-img-ph">🏗️</div>`;
-  const vialMeta=cat.vial?`
-    <div class="c-meta-item"><span class="c-meta-ico">📏</span><div><div class="c-meta-lbl">Longitud</div><div class="c-meta-val">${o.longitud?Number(o.longitud).toLocaleString()+' m':'--'}</div></div></div>
-    <div class="c-meta-item"><span class="c-meta-ico">⬛</span><div><div class="c-meta-lbl">Área</div><div class="c-meta-val">${o.area?Number(o.area).toLocaleString()+' m²':'--'}</div></div></div>`:'';
+  const vialMeta=cat.vial?`<div class="c-meta-item"><span class="c-meta-ico">📏</span><div><div class="c-meta-lbl">Longitud</div><div class="c-meta-val">${o.longitud?Number(o.longitud).toLocaleString()+' m':'--'}</div></div></div><div class="c-meta-item"><span class="c-meta-ico">⬛</span><div><div class="c-meta-lbl">Área</div><div class="c-meta-val">${o.area?Number(o.area).toLocaleString()+' m²':'--'}</div></div></div>`:'';
   const editorBtns=isEditor?`<div class="c-actions"><button class="c-btn c-btn-edit" data-oid="${o.id}">✏️ Editar</button><button class="c-btn c-btn-del" data-oid="${o.id}">🗑 Eliminar</button></div>`:'';
-  return`<div class="obra-card">
-    <div class="c-hdr" style="background:${cat.color}">${pinSvg(cat.color,cat.icon||'',stIcon(o.status),22)}<span class="c-hdr-num">${o.contrato||'—'}</span></div>
-    ${imgH}
-    <div class="c-body"><div class="c-name">${(o.nombre||'').toUpperCase()}</div><div class="c-col">${o.colonia||''}</div><div class="c-zona">${o.junta||''}</div></div>
-    <div class="c-pills"><span class="c-pill" style="background:${sc}22;color:${sc}">${sl}</span><span class="c-pill" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span></div>
-    <hr class="c-hr"/>
-    <div class="c-meta">
-      <div class="c-meta-item"><span class="c-meta-ico">📅</span><div><div class="c-meta-lbl">Plazo</div><div class="c-meta-val">${fmt(o.inicio)} — ${fmt(o.termino)}</div></div></div>
-      <div class="c-meta-item"><span class="c-meta-ico">💰</span><div><div class="c-meta-lbl">Inversión</div><div class="c-meta-val">${fmtMdp(o.inversion)}</div></div></div>
-      ${vialMeta}
-    </div>${editorBtns}</div>`;
+  return`<div class="obra-card"><div class="c-hdr" style="background:${cat.color}">${pinSvg(cat.color,cat.icon||'',stIcon(o.status),22)}<span class="c-hdr-num">${o.contrato||'—'}</span></div>${imgH}<div class="c-body"><div class="c-name">${(o.nombre||'').toUpperCase()}</div><div class="c-col">${o.colonia||''}</div><div class="c-zona">${o.junta||''}</div></div><div class="c-pills"><span class="c-pill" style="background:${sc}22;color:${sc}">${sl}</span><span class="c-pill" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span></div><hr class="c-hr"/><div class="c-meta"><div class="c-meta-item"><span class="c-meta-ico">📅</span><div><div class="c-meta-lbl">Plazo</div><div class="c-meta-val">${fmt(o.inicio)} — ${fmt(o.termino)}</div></div></div><div class="c-meta-item"><span class="c-meta-ico">💰</span><div><div class="c-meta-lbl">Inversión</div><div class="c-meta-val">${fmtMdp(o.inversion)}</div></div></div>${vialMeta}</div>${editorBtns}</div>`;
 }
 
 // ── MAP RENDER ──
-const filtered=()=>obras.filter(o=>{
-  const ms=filt==='todas'||o.status===filt;
-  const mq=!q||(o.nombre+o.colonia+o.junta+o.contrato).toLowerCase().includes(q);
-  return ms&&mq;
-});
+const filtered=()=>obras.filter(o=>{const ms=filt==='todas'||o.status===filt;const mq=!q||(o.nombre+o.colonia+o.junta+o.contrato).toLowerCase().includes(q);return ms&&mq;});
 
 function clearLayers(){
   Object.values(markers).forEach(m=>{try{map.removeLayer(m);}catch{}});
@@ -627,127 +654,72 @@ function renderMarkers(){
       const pl=L.polyline(tramoLatLng,{color:cat.color,weight:6,opacity:.85,lineJoin:'round',lineCap:'round'}).addTo(map);
       if(o.status==='proyectada')pl.setStyle({dashArray:'10 6'});
       pl.bindPopup(L.popup({maxWidth:280,minWidth:268}).setContent(buildCard(o)));
-      pl.on('popupopen',()=>attachPopupEvents(o.id));
-      polylines[o.id]=pl;
+      pl.on('popupopen',()=>attachPopupEvents(o.id));polylines[o.id]=pl;
       const mid=tramoLatLng[Math.floor(tramoLatLng.length/2)];
       labelMarkers[o.id]=L.marker(mid,{icon:L.divIcon({html:`<div class="obra-label-inner" style="color:${cat.color}">${o.contrato||o.nombre}</div>`,className:'obra-label',iconAnchor:[0,8]}),interactive:false,zIndexOffset:-100}).addTo(map);
     }
-    if(o.lat&&o.lng){
+    // Función 4: solo mostrar pin si showPin !== false
+    if(o.lat&&o.lng&&o.showPin!==false){
       const m=L.marker([o.lat,o.lng],{icon:mkLeafletIcon(o.status,o.catId)}).addTo(map);
       m.bindPopup(L.popup({maxWidth:280,minWidth:268}).setContent(buildCard(o)));
-      m.on('popupopen',()=>attachPopupEvents(o.id));
-      markers[o.id]=m;
+      m.on('popupopen',()=>attachPopupEvents(o.id));markers[o.id]=m;
     }
   });
 }
 
-function attachPopupEvents(oid){
-  setTimeout(()=>{
-    document.querySelectorAll(`.c-btn-edit[data-oid="${oid}"]`).forEach(b=>b.onclick=()=>{map.closePopup();setTimeout(()=>openModal(oid),80);});
-    document.querySelectorAll(`.c-btn-del[data-oid="${oid}"]`).forEach(b=>b.onclick=()=>doDeleteObra(oid));
-  },120);
-}
-async function doDeleteObra(id){
-  if(!confirm('¿Eliminar esta obra permanentemente?'))return;
-  await deleteObraFS(id);map.closePopup();
-}
+function attachPopupEvents(oid){setTimeout(()=>{document.querySelectorAll(`.c-btn-edit[data-oid="${oid}"]`).forEach(b=>b.onclick=()=>{map.closePopup();setTimeout(()=>openModal(oid),80);});document.querySelectorAll(`.c-btn-del[data-oid="${oid}"]`).forEach(b=>b.onclick=()=>doDeleteObra(oid));},120);}
+async function doDeleteObra(id){if(!confirm('¿Eliminar esta obra permanentemente?'))return;await deleteObraFS(id);map.closePopup();}
 
-// ── PANEL RENDER (with grouping) ──
 function renderPanel(){
   const arr=filtered();
   document.getElementById('count').textContent=`(${arr.length})`;
   const list=document.getElementById('obra-list');
   if(!arr.length){list.innerHTML='<div class="empty">Sin resultados.</div>';return;}
-
-  if(groupMode==='none'){
-    list.innerHTML=arr.map(o=>obraItemHTML(o)).join('');
-    return;
-  }
-
-  // Build groups
+  if(groupMode==='none'){list.innerHTML=arr.map(o=>obraItemHTML(o)).join('');return;}
   const groups=new Map();
   arr.forEach(o=>{
     let key,color,label;
-    if(groupMode==='cat'){
-      const cat=getCat(o.catId);
-      key=cat.id; label=cat.name; color=cat.color;
-    } else {
-      key=getYear(o); label=key; color='#4a1942';
-    }
+    if(groupMode==='cat'){const cat=getCat(o.catId);key=cat.id;label=cat.name;color=cat.color;}
+    else{key=getYear(o);label=key;color='#4a1942';}
     if(!groups.has(key))groups.set(key,{label,color,items:[]});
     groups.get(key).items.push(o);
   });
-
-  // Sort groups: years descending, cats by order
   const sorted=[...groups.entries()];
-  if(groupMode==='year') sorted.sort((a,b)=>b[0].localeCompare(a[0]));
-
+  if(groupMode==='year')sorted.sort((a,b)=>b[0].localeCompare(a[0]));
   list.innerHTML=sorted.map(([key,{label,color,items}])=>{
     const collapsed=collapsedGroups.has(key);
     const dot=groupMode==='cat'?`<div class="group-dot" style="background:${color}"></div>`:`<span style="font-size:13px">📅</span>`;
-    return`<div class="group-section">
-      <div class="group-header" data-gkey="${key}">
-        <div class="group-header-left">
-          ${dot}
-          <span class="group-label">${label}</span>
-          <span class="group-count">${items.length} obra${items.length!==1?'s':''}</span>
-        </div>
-        <span class="group-chevron ${collapsed?'':'open'}">▶</span>
-      </div>
-      <div class="group-body ${collapsed?'collapsed':''}">
-        ${items.map(o=>obraItemHTML(o)).join('')}
-      </div>
-    </div>`;
+    return`<div class="group-section"><div class="group-header" data-gkey="${key}"><div class="group-header-left">${dot}<span class="group-label">${label}</span><span class="group-count">${items.length} obra${items.length!==1?'s':''}</span></div><span class="group-chevron ${collapsed?'':'open'}">▶</span></div><div class="group-body ${collapsed?'collapsed':''}">${items.map(o=>obraItemHTML(o)).join('')}</div></div>`;
   }).join('');
-
-  // Toggle collapse
-  list.querySelectorAll('.group-header').forEach(h=>{
-    h.addEventListener('click',()=>{
-      const key=h.dataset.gkey;
-      if(collapsedGroups.has(key))collapsedGroups.delete(key);
-      else collapsedGroups.add(key);
-      renderPanel();
-    });
-  });
+  list.querySelectorAll('.group-header').forEach(h=>h.addEventListener('click',()=>{const key=h.dataset.gkey;if(collapsedGroups.has(key))collapsedGroups.delete(key);else collapsedGroups.add(key);renderPanel();}));
 }
 
 function obraItemHTML(o){
   const cat=getCat(o.catId),sc=ST_COL[o.status]||'#888',sl=ST_LBL[o.status]||o.status;
-  return`<div class="obra-item" onclick="window.focusObra('${o.id}')">
-    <div class="obra-item-title">${o.nombre||''}</div>
-    <div class="obra-item-sub">${o.colonia||''} · ${o.junta||''}</div>
-    <div class="obra-item-badges">
-      <span class="badge" style="background:${sc}22;color:${sc}">${sl}</span>
-      <span class="badge" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span>
-    </div></div>`;
+  const hiddenBadge=o.showPin===false?'<span class="badge" style="background:#fff3e0;color:#e65100">📌 Sin pin</span>':'';
+  return`<div class="obra-item" onclick="window.focusObra('${o.id}')"><div class="obra-item-title">${o.nombre||''}</div><div class="obra-item-sub">${o.colonia||''} · ${o.junta||''}</div><div class="obra-item-badges"><span class="badge" style="background:${sc}22;color:${sc}">${sl}</span><span class="badge" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span>${hiddenBadge}</div></div>`;
 }
 
 function renderAll(){renderMarkers();renderPanel();}
 
-// Grouping toolbar
-document.querySelectorAll('.group-btn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.group-btn').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    groupMode=b.dataset.group;
-    collapsedGroups.clear();
-    renderPanel();
-  });
-});
+document.querySelectorAll('.group-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.group-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');groupMode=b.dataset.group;collapsedGroups.clear();renderPanel();});});
 
 window.focusObra=id=>{
   const o=obras.find(x=>x.id===id);if(!o)return;
   const tramoLatLng=parseTramo(o.tramo);
   if(tramoLatLng.length>=2&&polylines[id]){map.fitBounds(polylines[id].getBounds(),{padding:[40,40],maxZoom:17});setTimeout(()=>{polylines[id].openPopup();attachPopupEvents(id);},400);}
-  else if(o.lat&&o.lng){map.setView([o.lat,o.lng],16);setTimeout(()=>{markers[id]?.openPopup();attachPopupEvents(id);},300);}
+  else if(o.lat&&o.lng&&o.showPin!==false){map.setView([o.lat,o.lng],16);setTimeout(()=>{markers[id]?.openPopup();attachPopupEvents(id);},300);}
+  else{map.setView([19.000,-98.200],13);}
 };
 
-document.querySelectorAll('.filter-btn').forEach(b=>{
-  b.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');filt=b.dataset.status;renderAll();});
-});
+document.querySelectorAll('.filter-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');filt=b.dataset.status;renderAll();});});
 document.getElementById('search').addEventListener('input',e=>{q=e.target.value.toLowerCase();renderAll();});
 
 // ── OBRA MODAL ──
+document.getElementById('f-show-pin').addEventListener('change',function(){
+  document.getElementById('pin-location-fields').style.display=this.checked?'':'none';
+  formDirty=true;
+});
 document.getElementById('f-inversion').addEventListener('input',function(){document.getElementById('inv-preview').innerHTML=fmtInvFull(this.value);formDirty=true;});
 document.getElementById('f-tipo').addEventListener('change',function(){const cat=getCat(this.value);document.getElementById('vial-fields').style.display=cat.vial?'flex':'none';formDirty=true;});
 ['f-nombre','f-colonia','f-contrato','f-inicio','f-termino','f-longitud','f-area'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>formDirty=true));
@@ -765,9 +737,7 @@ function processImg(file){
   const err=document.getElementById('img-err');err.style.display='none';
   if(!['image/jpeg','image/png'].includes(file.type)){err.textContent='Solo JPG o PNG.';err.style.display='block';return;}
   if(file.size>2*1024*1024){err.textContent='Máximo 2 MB.';err.style.display='block';return;}
-  const r=new FileReader();
-  r.onload=e=>{const img=new Image();img.onload=()=>{if(img.width<800){err.textContent=`Ancho ${img.width}px — menor al recomendado (800px).`;err.style.display='block';}currentImgBase64=e.target.result;document.getElementById('img-prev').src=e.target.result;document.getElementById('img-prev-wrap').style.display='block';imgDrop.style.display='none';formDirty=true;};img.src=e.target.result;};
-  r.readAsDataURL(file);
+  const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{if(img.width<800){err.textContent=`Ancho ${img.width}px — menor al recomendado (800px).`;err.style.display='block';}currentImgBase64=e.target.result;document.getElementById('img-prev').src=e.target.result;document.getElementById('img-prev-wrap').style.display='block';imgDrop.style.display='none';formDirty=true;};img.src=e.target.result;};r.readAsDataURL(file);
 }
 function clearImg(){currentImgBase64='';imgFile.value='';document.getElementById('img-prev-wrap').style.display='none';imgDrop.style.display='block';document.getElementById('img-err').style.display='none';}
 
@@ -779,6 +749,9 @@ function openModal(id){
   document.getElementById('modal-title').textContent=id?'Editar Obra':'Nueva Obra';
   document.getElementById('btn-delete').style.display=id?'':'none';
   document.getElementById('f-nombre').value=o?.nombre||'';
+  const showPin=o?.showPin!==false;
+  document.getElementById('f-show-pin').checked=showPin;
+  document.getElementById('pin-location-fields').style.display=showPin?'':'none';
   document.getElementById('f-colonia').value=o?.colonia||'';
   document.getElementById('geo-col-ico').textContent='';document.getElementById('geo-jun-ico').textContent='';document.getElementById('geo-status').className='geo-badge';
   document.getElementById('f-junta').value=o?.junta||'';
@@ -799,29 +772,25 @@ function openModal(id){
   document.getElementById('overlay-obra').querySelector('.modal').scrollTop=0;
 }
 function tryClose(){if(formDirty)document.getElementById('overlay-confirm').classList.add('open');else closeModal();}
-function closeModal(){
-  document.getElementById('overlay-obra').classList.remove('open');document.getElementById('overlay-confirm').classList.remove('open');
-  editId=null;formDirty=false;
-  if(tmpMk){map.removeLayer(tmpMk);tmpMk=null;}
-  setPickMode(false);if(traceMode)stopTrace(false);
-}
+function closeModal(){document.getElementById('overlay-obra').classList.remove('open');document.getElementById('overlay-confirm').classList.remove('open');editId=null;formDirty=false;if(tmpMk){map.removeLayer(tmpMk);tmpMk=null;}setPickMode(false);if(traceMode)stopTrace(false);}
 document.getElementById('obra-close').onclick=tryClose;
 document.getElementById('btn-cancel').onclick=tryClose;
 document.getElementById('overlay-obra').onclick=e=>{if(e.target.id==='overlay-obra')tryClose();};
 document.getElementById('confirm-no').onclick=()=>document.getElementById('overlay-confirm').classList.remove('open');
 document.getElementById('confirm-yes').onclick=closeModal;
 document.getElementById('btn-add').onclick=()=>openModal();
-document.getElementById('btn-delete').onclick=async()=>{if(!editId||!confirm('¿Eliminar esta obra permanentemente?'))return;await deleteObraFS(editId);formDirty=false;closeModal();};
+document.getElementById('btn-delete').onclick=async()=>{if(!editId||!confirm('¿Eliminar?'))return;await deleteObraFS(editId);formDirty=false;closeModal();};
 document.getElementById('btn-save').onclick=async()=>{
   const nom=document.getElementById('f-nombre').value.trim();if(!nom){alert('El nombre es requerido.');return;}
-  const lat=parseFloat(document.getElementById('f-lat').value),lng=parseFloat(document.getElementById('f-lng').value);
-  if(isNaN(lat)||isNaN(lng)){alert('Selecciona la ubicación del pin.');return;}
+  const showPin=document.getElementById('f-show-pin').checked;
+  let lat=null,lng=null;
+  if(showPin){lat=parseFloat(document.getElementById('f-lat').value);lng=parseFloat(document.getElementById('f-lng').value);if(isNaN(lat)||isNaN(lng)){alert('Selecciona la ubicación del pin.');return;}}
   const catId=document.getElementById('f-tipo').value,cat=getCat(catId);
-  const o={id:editId||String(Date.now()),nombre:nom,colonia:document.getElementById('f-colonia').value.trim(),junta:document.getElementById('f-junta').value,contrato:document.getElementById('f-contrato').value.trim(),inversion:parseFloat(document.getElementById('f-inversion').value)||0,inicio:document.getElementById('f-inicio').value,termino:document.getElementById('f-termino').value,catId,status:document.getElementById('f-status').value,img:currentImgBase64,lat,lng,longitud:cat.vial?parseFloat(document.getElementById('f-longitud').value)||null:null,area:cat.vial?parseFloat(document.getElementById('f-area').value)||null:null,tramo:cat.vial?currentTramo:[]};
+  const o={id:editId||String(Date.now()),nombre:nom,colonia:document.getElementById('f-colonia').value.trim(),junta:document.getElementById('f-junta').value,contrato:document.getElementById('f-contrato').value.trim(),inversion:parseFloat(document.getElementById('f-inversion').value)||0,inicio:document.getElementById('f-inicio').value,termino:document.getElementById('f-termino').value,catId,status:document.getElementById('f-status').value,img:currentImgBase64,lat,lng,showPin,longitud:cat.vial?parseFloat(document.getElementById('f-longitud').value)||null:null,area:cat.vial?parseFloat(document.getElementById('f-area').value)||null:null,tramo:cat.vial?currentTramo:[]};
   formDirty=false;await saveObra(o);closeModal();setTimeout(()=>window.focusObra(o.id),400);
 };
 
-// ── PICK MODE ──
+// ── PICK & TRACE ──
 function setPickMode(on){
   pickMode=on;const bar=document.getElementById('map-mode-bar');
   if(on){bar.innerHTML='📍 Haz clic en el mapa para colocar el pin. <button class="btn-sec" style="font-size:11px;padding:5px 10px;margin-left:8px" onclick="window.cancelPick()">✕ Cancelar</button>';bar.className='pick';}
@@ -832,82 +801,28 @@ function setPickMode(on){
 window.cancelPick=()=>{setPickMode(false);document.getElementById('overlay-obra').classList.add('open');};
 document.getElementById('btn-pick').onclick=()=>{document.getElementById('overlay-obra').classList.remove('open');setPickMode(true);};
 
-// ── TRACE MODE ──
 function updateTraceInfo(){const info=document.getElementById('trace-info');if(!info)return;if(currentTramo.length>=2){info.textContent=`✅ Tramo con ${currentTramo.length} puntos.`;info.style.color='#2E7D32';}else{info.textContent='Sin tramo trazado.';info.style.color='#888';}}
-function updateTraceBar(){
-  const n=pendingTrace.length;
-  document.getElementById('map-mode-bar').innerHTML=`<span>✏️ <b>${n} punto${n!==1?'s':''}</b> — Clic para continuar</span><button class="btn-grn" id="td-fin" style="margin-left:8px">✔ Finalizar</button><button class="btn-org" id="td-und" style="margin-left:4px">↩ Deshacer</button><button class="btn-sec" id="td-can" style="margin-left:4px;font-size:11px;padding:5px 10px">✕ Cancelar</button>`;
-  document.getElementById('td-fin').onclick=()=>stopTrace(true);
-  document.getElementById('td-und').onclick=undoTrace;
-  document.getElementById('td-can').onclick=()=>stopTrace(false);
-}
+function updateTraceBar(){const n=pendingTrace.length;document.getElementById('map-mode-bar').innerHTML=`<span>✏️ <b>${n} punto${n!==1?'s':''}</b></span><button class="btn-grn" id="td-fin" style="margin-left:8px">✔ Finalizar</button><button class="btn-org" id="td-und" style="margin-left:4px">↩ Deshacer</button><button class="btn-sec" id="td-can" style="margin-left:4px;font-size:11px;padding:5px 10px">✕ Cancelar</button>`;document.getElementById('td-fin').onclick=()=>stopTrace(true);document.getElementById('td-und').onclick=undoTrace;document.getElementById('td-can').onclick=()=>stopTrace(false);}
 function undoTrace(){if(!pendingTrace.length)return;pendingTrace.pop();const last=traceMarkers.pop();if(last)map.removeLayer(last);if(livePolyline){map.removeLayer(livePolyline);livePolyline=null;}if(pendingTrace.length>=2)livePolyline=L.polyline(pendingTrace,{color:'#2E7D32',weight:5,dashArray:'8 4'}).addTo(map);updateTraceBar();}
-function startTrace(){
-  traceMode=true;pendingTrace=JSON.parse(JSON.stringify(currentTramo));
-  document.getElementById('overlay-obra').classList.remove('open');
-  document.getElementById('map-mode-bar').className='trace';
-  map.getContainer().style.cursor='crosshair';map.doubleClickZoom.disable();
-  if(pendingTrace.length>=2)livePolyline=L.polyline(pendingTrace,{color:'#2E7D32',weight:5,dashArray:'8 4'}).addTo(map);
-  pendingTrace.forEach(pt=>traceMarkers.push(L.circleMarker(pt,{radius:5,color:'#fff',fillColor:'#2E7D32',fillOpacity:1,weight:2}).addTo(map)));
-  updateTraceBar();
-}
-function stopTrace(keep){
-  traceMode=false;const bar=document.getElementById('map-mode-bar');bar.className='';bar.innerHTML='';
-  map.getContainer().style.cursor='';map.doubleClickZoom.enable();
-  if(livePolyline){map.removeLayer(livePolyline);livePolyline=null;}
-  traceMarkers.forEach(m=>map.removeLayer(m));traceMarkers=[];
-  if(keep&&pendingTrace.length>=2){currentTramo=JSON.parse(JSON.stringify(pendingTrace));formDirty=true;}
-  pendingTrace=[];updateTraceInfo();document.getElementById('overlay-obra').classList.add('open');
-}
+function startTrace(){traceMode=true;pendingTrace=JSON.parse(JSON.stringify(currentTramo));document.getElementById('overlay-obra').classList.remove('open');document.getElementById('map-mode-bar').className='trace';map.getContainer().style.cursor='crosshair';map.doubleClickZoom.disable();if(pendingTrace.length>=2)livePolyline=L.polyline(pendingTrace,{color:'#2E7D32',weight:5,dashArray:'8 4'}).addTo(map);pendingTrace.forEach(pt=>traceMarkers.push(L.circleMarker(pt,{radius:5,color:'#fff',fillColor:'#2E7D32',fillOpacity:1,weight:2}).addTo(map)));updateTraceBar();}
+function stopTrace(keep){traceMode=false;const bar=document.getElementById('map-mode-bar');bar.className='';bar.innerHTML='';map.getContainer().style.cursor='';map.doubleClickZoom.enable();if(livePolyline){map.removeLayer(livePolyline);livePolyline=null;}traceMarkers.forEach(m=>map.removeLayer(m));traceMarkers=[];if(keep&&pendingTrace.length>=2){currentTramo=JSON.parse(JSON.stringify(pendingTrace));formDirty=true;}pendingTrace=[];updateTraceInfo();document.getElementById('overlay-obra').classList.add('open');}
 document.getElementById('btn-open-trace').onclick=startTrace;
 document.getElementById('btn-clear-trace').onclick=()=>{currentTramo=[];formDirty=true;updateTraceInfo();};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(traceMode)stopTrace(false);else if(pickMode){setPickMode(false);document.getElementById('overlay-obra').classList.add('open');}}});
 
 // ── PIN EDITOR ──
-function renderPinsGrid(){
-  const grid=document.getElementById('pins-grid');grid.innerHTML='';
-  cats.forEach(c=>{
-    const div=document.createElement('div');div.className='pin-card';
-    div.innerHTML=`<div class="pin-card-preview">${pinSvg(c.color,c.icon||'',null,44)}</div><div class="pin-card-name">${c.name}${c.vial?' <span style="font-size:9px;color:#1565C0">(vial)</span>':''}</div><button class="pin-card-del" data-cid="${c.id}">&times;</button>`;
-    div.onclick=e=>{if(e.target.classList.contains('pin-card-del'))return;openPinEdit(c.id);};
-    div.querySelector('.pin-card-del').onclick=e=>{e.stopPropagation();deleteCat(c.id);};
-    grid.appendChild(div);
-  });
-  const add=document.createElement('div');add.className='pin-add-card';add.innerHTML='<span style="font-size:22px">+</span><span>Nueva categoría</span>';add.onclick=()=>openPinEdit(null);grid.appendChild(add);
-}
-async function deleteCat(id){if(obras.some(o=>o.catId===id)){alert('Categoría en uso. Reasigna las obras primero.');return;}if(!confirm('¿Eliminar esta categoría?'))return;await deleteCatFS(id);cats=cats.filter(c=>c.id!==id);buildTipoSelect();renderPinsGrid();renderAll();}
-function openPinEdit(id){
-  editingCatId=id;const c=id?getCat(id):{id:'',name:'',color:'#1565C0',icon:'',vial:false};
-  currentPinColor=c.color;currentPinIcon=c.icon||'';
-  document.getElementById('pin-edit-title').textContent=id?`Editando: ${c.name}`:'Nueva categoría';
-  document.getElementById('pin-name').value=c.name;document.getElementById('pin-color-input').value=c.color;document.getElementById('pin-color-hex').textContent=c.color;document.getElementById('pin-vial').checked=!!c.vial;
-  buildColorSwatches();
-  if(c.icon){document.getElementById('pin-icon-preview').src=c.icon;document.getElementById('icon-preview-wrap').style.display='flex';document.getElementById('icon-drop').style.display='none';}
-  else{document.getElementById('icon-preview-wrap').style.display='none';document.getElementById('icon-drop').style.display='block';}
-  updatePinPreview();document.getElementById('pin-edit-form').classList.add('open');document.getElementById('pins-modal-body').scrollTop=9999;
-}
-function buildColorSwatches(){
-  const row=document.getElementById('color-swatches');row.innerHTML='';
-  PRESET_COLORS.forEach(col=>{const sw=document.createElement('div');sw.className='color-swatch'+(col===currentPinColor?' active':'');sw.style.background=col;sw.title=col;sw.onclick=()=>{currentPinColor=col;document.getElementById('pin-color-input').value=col;document.getElementById('pin-color-hex').textContent=col;document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('active',s.title===col));updatePinPreview();};row.appendChild(sw);});
-}
+function renderPinsGrid(){const grid=document.getElementById('pins-grid');grid.innerHTML='';cats.forEach(c=>{const div=document.createElement('div');div.className='pin-card';div.innerHTML=`<div class="pin-card-preview">${pinSvg(c.color,c.icon||'',null,44)}</div><div class="pin-card-name">${c.name}${c.vial?' <span style="font-size:9px;color:#1565C0">(vial)</span>':''}</div><button class="pin-card-del" data-cid="${c.id}">&times;</button>`;div.onclick=e=>{if(e.target.classList.contains('pin-card-del'))return;openPinEdit(c.id);};div.querySelector('.pin-card-del').onclick=e=>{e.stopPropagation();deleteCat(c.id);};grid.appendChild(div);});const add=document.createElement('div');add.className='pin-add-card';add.innerHTML='<span style="font-size:22px">+</span><span>Nueva categoría</span>';add.onclick=()=>openPinEdit(null);grid.appendChild(add);}
+async function deleteCat(id){if(obras.some(o=>o.catId===id)){alert('Categoría en uso.');return;}if(!confirm('¿Eliminar?'))return;await deleteCatFS(id);cats=cats.filter(c=>c.id!==id);buildTipoSelect();renderPinsGrid();renderAll();}
+function openPinEdit(id){editingCatId=id;const c=id?getCat(id):{id:'',name:'',color:'#1565C0',icon:'',vial:false};currentPinColor=c.color;currentPinIcon=c.icon||'';document.getElementById('pin-edit-title').textContent=id?`Editando: ${c.name}`:'Nueva categoría';document.getElementById('pin-name').value=c.name;document.getElementById('pin-color-input').value=c.color;document.getElementById('pin-color-hex').textContent=c.color;document.getElementById('pin-vial').checked=!!c.vial;buildColorSwatches();if(c.icon){document.getElementById('pin-icon-preview').src=c.icon;document.getElementById('icon-preview-wrap').style.display='flex';document.getElementById('icon-drop').style.display='none';}else{document.getElementById('icon-preview-wrap').style.display='none';document.getElementById('icon-drop').style.display='block';}updatePinPreview();document.getElementById('pin-edit-form').classList.add('open');document.getElementById('pins-modal-body').scrollTop=9999;}
+function buildColorSwatches(){const row=document.getElementById('color-swatches');row.innerHTML='';PRESET_COLORS.forEach(col=>{const sw=document.createElement('div');sw.className='color-swatch'+(col===currentPinColor?' active':'');sw.style.background=col;sw.title=col;sw.onclick=()=>{currentPinColor=col;document.getElementById('pin-color-input').value=col;document.getElementById('pin-color-hex').textContent=col;document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('active',s.title===col));updatePinPreview();};row.appendChild(sw);});}
 document.getElementById('pin-color-input').addEventListener('input',function(){currentPinColor=this.value;document.getElementById('pin-color-hex').textContent=this.value;document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));updatePinPreview();});
 function updatePinPreview(){document.getElementById('pin-prev-proy').innerHTML=pinSvg(currentPinColor,currentPinIcon,null,40);document.getElementById('pin-prev-proc').innerHTML=pinSvg(currentPinColor,currentPinIcon,ICON_GEAR,40);document.getElementById('pin-prev-term').innerHTML=pinSvg(currentPinColor,currentPinIcon,ICON_CHECK,40);}
 const iconDrop=document.getElementById('icon-drop'),iconFile=document.getElementById('icon-file');
-iconDrop.addEventListener('click',()=>iconFile.click());
-iconDrop.addEventListener('dragover',e=>{e.preventDefault();iconDrop.style.borderColor='#4a1942';});
-iconDrop.addEventListener('dragleave',()=>iconDrop.style.borderColor='');
-iconDrop.addEventListener('drop',e=>{e.preventDefault();iconDrop.style.borderColor='';if(e.dataTransfer.files[0])processIcon(e.dataTransfer.files[0]);});
-iconFile.addEventListener('change',()=>{if(iconFile.files[0])processIcon(iconFile.files[0]);});
+iconDrop.addEventListener('click',()=>iconFile.click());iconDrop.addEventListener('dragover',e=>{e.preventDefault();iconDrop.style.borderColor='#4a1942';});iconDrop.addEventListener('dragleave',()=>iconDrop.style.borderColor='');iconDrop.addEventListener('drop',e=>{e.preventDefault();iconDrop.style.borderColor='';if(e.dataTransfer.files[0])processIcon(e.dataTransfer.files[0]);});iconFile.addEventListener('change',()=>{if(iconFile.files[0])processIcon(iconFile.files[0]);});
 document.getElementById('icon-remove').onclick=()=>{currentPinIcon='';document.getElementById('icon-preview-wrap').style.display='none';document.getElementById('icon-drop').style.display='block';iconFile.value='';updatePinPreview();};
 function processIcon(file){if(!['image/svg+xml','image/png'].includes(file.type)){alert('Solo SVG o PNG.');return;}if(file.size>50*1024){alert('Máximo 50 KB.');return;}const r=new FileReader();r.onload=e=>{currentPinIcon=e.target.result;document.getElementById('pin-icon-preview').src=e.target.result;document.getElementById('icon-preview-wrap').style.display='flex';document.getElementById('icon-drop').style.display='none';updatePinPreview();};r.readAsDataURL(file);}
 document.getElementById('pin-edit-cancel').onclick=()=>document.getElementById('pin-edit-form').classList.remove('open');
-document.getElementById('pin-edit-save').onclick=async()=>{
-  const name=document.getElementById('pin-name').value.trim();if(!name){alert('El nombre es requerido.');return;}
-  const isVial=document.getElementById('pin-vial').checked;
-  const c={id:editingCatId||'c'+Date.now(),name,color:currentPinColor,icon:currentPinIcon,vial:isVial};
-  await saveCatFS(c);if(editingCatId)cats=cats.map(x=>x.id===editingCatId?c:x);else cats.push(c);
-  buildTipoSelect();renderPinsGrid();renderAll();document.getElementById('pin-edit-form').classList.remove('open');
-};
+document.getElementById('pin-edit-save').onclick=async()=>{const name=document.getElementById('pin-name').value.trim();if(!name){alert('Nombre requerido.');return;}const isVial=document.getElementById('pin-vial').checked;const c={id:editingCatId||'c'+Date.now(),name,color:currentPinColor,icon:currentPinIcon,vial:isVial};await saveCatFS(c);if(editingCatId)cats=cats.map(x=>x.id===editingCatId?c:x);else cats.push(c);buildTipoSelect();renderPinsGrid();renderAll();document.getElementById('pin-edit-form').classList.remove('open');};
 document.getElementById('pin-add-new').onclick=()=>openPinEdit(null);
 document.getElementById('btn-pins').onclick=()=>{document.getElementById('overlay-pins').classList.add('open');renderPinsGrid();document.getElementById('pin-edit-form').classList.remove('open');};
 document.getElementById('pins-close').onclick=()=>document.getElementById('overlay-pins').classList.remove('open');
@@ -916,27 +831,104 @@ document.getElementById('overlay-pins').onclick=e=>{if(e.target.id==='overlay-pi
 
 // ── MAP INIT ──
 function initMap(){
-  map=L.map('map',{center:[19.000,-98.200],zoom:13,zoomControl:true});
+  // Función 1: limitar bounds al municipio de Puebla
+  const PUEBLA_SW=L.latLng(18.85,-98.40);
+  const PUEBLA_NE=L.latLng(19.21,-97.95);
+  const PUEBLA_BOUNDS_OBJ=L.latLngBounds(PUEBLA_SW,PUEBLA_NE);
+
+  map=L.map('map',{
+    center:[19.040,-98.200],zoom:13,
+    zoomControl:true,
+    maxBounds:PUEBLA_BOUNDS_OBJ,
+    maxBoundsViscosity:0.85,
+    minZoom:11
+  });
 
   TILES={
-    carto: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd',attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'}),
-    satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,attribution:'&copy; Esri — Esri, Maxar, Earthstar Geographics'})
+    carto: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd',attribution:'&copy; OpenStreetMap &copy; CARTO'}),
+    // Función 2: satélite con calles - Esri WorldImagery + label overlay
+    satellite: L.layerGroup([
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,attribution:'&copy; Esri'}),
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd',opacity:1,attribution:'&copy; CARTO'})
+    ])
   };
   TILES.carto.addTo(map);
 
-  // Style toggle button
+  // Función 1: Límite municipio - polígono con exterior oscurecido
+  const worldPolygon=[[90,-180],[90,180],[-90,180],[-90,-180],[90,-180]];
+  L.polygon([worldPolygon,PUEBLA_BOUNDS],{
+    color:'#4a1942',weight:2,
+    fillColor:'#000',fillOpacity:0.25,
+    interactive:false
+  }).addTo(map);
+
+  // Style toggle
   const btn=document.createElement('button');
   btn.id='map-style-btn';btn.title='Cambiar estilo de mapa';
   btn.innerHTML=`<img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/410/235" alt="Satélite"/><span>SATÉLITE</span>`;
   document.getElementById('map').appendChild(btn);
   btn.addEventListener('click',()=>{
-    if(currentStyle==='carto'){
-      map.removeLayer(TILES.carto);TILES.satellite.addTo(map);currentStyle='satellite';
-      btn.innerHTML=`<img src="https://a.basemaps.cartocdn.com/light_all/10/410/235.png" alt="Mapa"/><span>MAPA</span>`;
-    } else {
-      map.removeLayer(TILES.satellite);TILES.carto.addTo(map);currentStyle='carto';
-      btn.innerHTML=`<img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/410/235" alt="Satélite"/><span>SATÉLITE</span>`;
-    }
+    if(currentStyle==='carto'){TILES.carto.removeFrom(map);TILES.satellite.addTo(map);currentStyle='satellite';btn.innerHTML=`<img src="https://a.basemaps.cartocdn.com/light_all/10/410/235.png" alt="Mapa"/><span>MAPA</span>`;}
+    else{TILES.satellite.removeFrom(map);TILES.carto.addTo(map);currentStyle='carto';btn.innerHTML=`<img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/410/235" alt="Satélite"/><span>SATÉLITE</span>`;}
+  });
+
+  // Layers panel (KMZ upload)
+  const layersBtn=document.createElement('button');
+  layersBtn.id='btn-layers-map';
+  layersBtn.innerHTML='<span>🗂</span>Capas';
+  document.getElementById('map').appendChild(layersBtn);
+
+  const layersPanel=document.createElement('div');
+  layersPanel.id='layers-panel';
+  layersPanel.innerHTML=`<h3>Capas del mapa</h3>
+    <div class="layer-item"><input type="checkbox" id="lyr-municipio" checked/><div class="layer-dot" style="background:#4a1942;opacity:.6"></div>Límite municipal</div>
+    <div id="kmz-layers-list"></div>
+    <div class="layer-upload">
+      <label>Agregar polígono KMZ / KML</label>
+      <div class="layer-upload-btn" id="kmz-upload-btn">📂 Subir archivo KMZ / KML</div>
+      <input type="file" id="kmz-file" accept=".kmz,.kml" style="display:none"/>
+    </div>`;
+  document.getElementById('map').appendChild(layersPanel);
+
+  layersBtn.addEventListener('click',()=>layersPanel.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!e.target.closest('#btn-layers-map')&&!e.target.closest('#layers-panel'))layersPanel.classList.remove('open');});
+
+  // Municipio boundary toggle
+  let municipioVisible=true;
+  const worldPoly=L.polygon([worldPolygon,PUEBLA_BOUNDS],{color:'#4a1942',weight:2,fillColor:'#000',fillOpacity:0.25,interactive:false}).addTo(map);
+  document.getElementById('lyr-municipio').addEventListener('change',function(){
+    if(this.checked)worldPoly.addTo(map); else map.removeLayer(worldPoly);
+  });
+
+  // KMZ/KML upload
+  const kmzColors=['#E65100','#1565C0','#2E7D32','#880E4F','#F57F17','#006064'];
+  let kmzCount=0;
+  document.getElementById('kmz-upload-btn').onclick=()=>document.getElementById('kmz-file').click();
+  document.getElementById('kmz-file').addEventListener('change',function(){
+    if(!this.files[0])return;
+    const file=this.files[0],name=file.name.replace(/\.(kmz|kml)$/i,'');
+    const color=kmzColors[kmzCount%kmzColors.length];kmzCount++;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const url=URL.createObjectURL(new Blob([e.target.result]));
+      let layer;
+      if(file.name.toLowerCase().endsWith('.kml')){
+        layer=omnivore.kml(url,null,L.geoJson(null,{style:{color,weight:2,fillOpacity:0.15,fillColor:color}}));
+      } else {
+        layer=omnivore.kmz(url,null,L.geoJson(null,{style:{color,weight:2,fillOpacity:0.15,fillColor:color}}));
+      }
+      layer.addTo(map);kmzLayers[name]=layer;
+      layer.on('ready',()=>{if(layer.getBounds&&layer.getBounds().isValid())map.fitBounds(layer.getBounds(),{padding:[20,20]});});
+      // Add to panel
+      const id='lyr-'+Date.now();
+      const item=document.createElement('div');item.className='layer-item';
+      item.innerHTML=`<input type="checkbox" id="${id}" checked/><div class="layer-dot" style="background:${color}"></div>${name}<button style="margin-left:auto;background:none;border:none;cursor:pointer;color:#c62828;font-size:12px" data-lname="${name}">✕</button>`;
+      item.querySelector('input').addEventListener('change',function(){if(this.checked)layer.addTo(map);else map.removeLayer(layer);});
+      item.querySelector('button').addEventListener('click',()=>{map.removeLayer(layer);delete kmzLayers[name];item.remove();});
+      document.getElementById('kmz-layers-list').appendChild(item);
+    };
+    reader.readAsArrayBuffer(file);
+    this.value='';
   });
 
   map.on('click',e=>{
@@ -946,10 +938,9 @@ function initMap(){
   map.on('dblclick',()=>{if(traceMode)stopTrace(true);});
 }
 
-const leafletScript=document.createElement('script');
-leafletScript.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
-leafletScript.onload=initMap;
-document.head.appendChild(leafletScript);
+// Wait for Leaflet + Omnivore to load then init
+function checkAndInit(){if(typeof L!=='undefined'&&typeof omnivore!=='undefined')initMap();else setTimeout(checkAndInit,100);}
+checkAndInit();
 </script>
 </body>
 </html>
