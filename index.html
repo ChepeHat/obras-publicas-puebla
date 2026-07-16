@@ -419,7 +419,7 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
@@ -447,14 +447,8 @@ const DEFAULT_CATS=[
   {id:'c11',name:'Edificación',color:'#4E342E',icon:'',vial:false},{id:'c12',name:'Otras Obras',color:'#546E7A',icon:'',vial:false}
 ];
 
-// ── Municipio de Puebla boundary (simplified polygon) ──
-const PUEBLA_BOUNDS=[
-  [19.1850,-98.2800],[19.1900,-98.1800],[19.1700,-98.0800],[19.1400,-98.0200],
-  [19.1000,-97.9800],[19.0500,-97.9600],[18.9800,-97.9800],[18.9200,-98.0200],
-  [18.8800,-98.0800],[18.8600,-98.1500],[18.8700,-98.2200],[18.9000,-98.2800],
-  [18.9500,-98.3200],[19.0000,-98.3400],[19.0600,-98.3300],[19.1100,-98.3100],
-  [19.1500,-98.3000],[19.1850,-98.2800]
-];
+// Límite del municipio se carga desde Overpass (OSM oficial)
+let PUEBLA_BOUNDS=null; // se llena al inicializar
 
 let cats=[],obras=[],markers={},polylines={},labelMarkers={};
 let editId=null,isEditor=false,currentUser=null;
@@ -707,10 +701,36 @@ document.querySelectorAll('.group-btn').forEach(b=>{b.addEventListener('click',(
 window.focusObra=id=>{
   const o=obras.find(x=>x.id===id);if(!o)return;
   const tramoLatLng=parseTramo(o.tramo);
-  if(tramoLatLng.length>=2&&polylines[id]){map.fitBounds(polylines[id].getBounds(),{padding:[40,40],maxZoom:17});setTimeout(()=>{polylines[id].openPopup();attachPopupEvents(id);},400);}
-  else if(o.lat&&o.lng&&o.showPin!==false){map.setView([o.lat,o.lng],16);setTimeout(()=>{markers[id]?.openPopup();attachPopupEvents(id);},300);}
-  else{map.setView([19.000,-98.200],13);}
+  if(tramoLatLng.length>=2&&polylines[id]){
+    map.fitBounds(polylines[id].getBounds(),{padding:[40,40],maxZoom:17});
+    setTimeout(()=>{polylines[id].openPopup();attachPopupEvents(id);},400);
+  } else if(o.lat&&o.lng&&o.showPin!==false){
+    map.setView([o.lat,o.lng],16);
+    setTimeout(()=>{markers[id]?.openPopup();attachPopupEvents(id);},300);
+  } else {
+    // Sin pin: mostrar card flotante en centro del mapa
+    showFloatingCard(o);
+  }
 };
+
+// ── FLOATING CARD (obras sin pin) ──
+function showFloatingCard(o){
+  let fc=document.getElementById('floating-card-overlay');
+  if(!fc){
+    fc=document.createElement('div');
+    fc.id='floating-card-overlay';
+    fc.style.cssText='position:absolute;inset:0;z-index:800;display:flex;align-items:center;justify-content:center;pointer-events:none';
+    fc.innerHTML='<div id="floating-card-inner" style="pointer-events:all;position:relative;filter:drop-shadow(0 8px 32px rgba(0,0,0,.3))"></div>';
+    document.getElementById('map').appendChild(fc);
+  }
+  const inner=fc.querySelector('#floating-card-inner');
+  inner.innerHTML=buildCard(o)+'<button id="fc-close" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;line-height:22px;text-align:center;z-index:10">&times;</button>';
+  fc.style.display='flex';
+  fc.querySelector('#fc-close').onclick=()=>{fc.style.display='none';};
+  fc.onclick=e=>{if(e.target===fc)fc.style.display='none';};
+  // attach editor buttons
+  attachPopupEvents(o.id);
+}
 
 document.querySelectorAll('.filter-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');filt=b.dataset.status;renderAll();});});
 document.getElementById('search').addEventListener('input',e=>{q=e.target.value.toLowerCase();renderAll();});
@@ -830,10 +850,27 @@ document.getElementById('pins-done').onclick=()=>document.getElementById('overla
 document.getElementById('overlay-pins').onclick=e=>{if(e.target.id==='overlay-pins')document.getElementById('overlay-pins').classList.remove('open');};
 
 // ── MAP INIT ──
-function initMap(){
-  // Función 1: limitar bounds al municipio de Puebla
-  const PUEBLA_SW=L.latLng(18.85,-98.40);
-  const PUEBLA_NE=L.latLng(19.21,-97.95);
+async function loadPueblaBoundary(){
+  try{
+    // Overpass: relación oficial del municipio de Puebla (OSM ID 2340636)
+    const res=await fetch('https://overpass-api.de/api/interpreter?data=[out:json];relation(2340636);out geom;');
+    const data=await res.json();
+    const rel=data.elements[0];
+    if(!rel||!rel.members)return null;
+    // Find outer way coordinates
+    const coords=[];
+    for(const m of rel.members){
+      if(m.role==='outer'&&m.geometry){
+        for(const pt of m.geometry) coords.push([pt.lat,pt.lon]);
+      }
+    }
+    return coords.length>0?coords:null;
+  }catch(e){console.warn('No se pudo cargar límite Puebla:',e);return null;}
+}
+
+async function initMap(){
+  const PUEBLA_SW=L.latLng(18.75,-98.45);
+  const PUEBLA_NE=L.latLng(19.25,-97.90);
   const PUEBLA_BOUNDS_OBJ=L.latLngBounds(PUEBLA_SW,PUEBLA_NE);
 
   map=L.map('map',{
@@ -854,13 +891,19 @@ function initMap(){
   };
   TILES.carto.addTo(map);
 
-  // Función 1: Límite municipio - polígono con exterior oscurecido
+  // Función 1: Cargar límite real del municipio de Puebla desde OSM
   const worldPolygon=[[90,-180],[90,180],[-90,180],[-90,-180],[90,-180]];
-  L.polygon([worldPolygon,PUEBLA_BOUNDS],{
-    color:'#4a1942',weight:2,
-    fillColor:'#000',fillOpacity:0.25,
-    interactive:false
-  }).addTo(map);
+  let worldPoly=null;
+  const pueblaCoords=await loadPueblaBoundary();
+  if(pueblaCoords&&pueblaCoords.length>0){
+    PUEBLA_BOUNDS=pueblaCoords;
+    worldPoly=L.polygon([worldPolygon,pueblaCoords],{color:'#4a1942',weight:2.5,fillColor:'#000',fillOpacity:0.22,interactive:false}).addTo(map);
+  } else {
+    // Fallback: polígono aproximado
+    const fallback=[[19.19,-98.28],[19.20,-98.15],[19.18,-98.04],[19.14,-97.97],[19.08,-97.95],[19.00,-97.96],[18.93,-98.01],[18.88,-98.08],[18.86,-98.16],[18.87,-98.24],[18.91,-98.30],[18.96,-98.34],[19.02,-98.35],[19.08,-98.33],[19.14,-98.31],[19.19,-98.28]];
+    PUEBLA_BOUNDS=fallback;
+    worldPoly=L.polygon([worldPolygon,fallback],{color:'#4a1942',weight:2.5,fillColor:'#000',fillOpacity:0.22,interactive:false}).addTo(map);
+  }
 
   // Style toggle
   const btn=document.createElement('button');
@@ -894,42 +937,90 @@ function initMap(){
   document.addEventListener('click',e=>{if(!e.target.closest('#btn-layers-map')&&!e.target.closest('#layers-panel'))layersPanel.classList.remove('open');});
 
   // Municipio boundary toggle
-  let municipioVisible=true;
-  const worldPoly=L.polygon([worldPolygon,PUEBLA_BOUNDS],{color:'#4a1942',weight:2,fillColor:'#000',fillOpacity:0.25,interactive:false}).addTo(map);
   document.getElementById('lyr-municipio').addEventListener('change',function(){
-    if(this.checked)worldPoly.addTo(map); else map.removeLayer(worldPoly);
+    if(worldPoly){if(this.checked)worldPoly.addTo(map);else map.removeLayer(worldPoly);}
   });
 
-  // KMZ/KML upload
+  // KMZ/KML upload usando JSZip + parser nativo
   const kmzColors=['#E65100','#1565C0','#2E7D32','#880E4F','#F57F17','#006064'];
   let kmzCount=0;
   document.getElementById('kmz-upload-btn').onclick=()=>document.getElementById('kmz-file').click();
-  document.getElementById('kmz-file').addEventListener('change',function(){
+  document.getElementById('kmz-file').addEventListener('change',async function(){
     if(!this.files[0])return;
     const file=this.files[0],name=file.name.replace(/\.(kmz|kml)$/i,'');
     const color=kmzColors[kmzCount%kmzColors.length];kmzCount++;
-    const reader=new FileReader();
-    reader.onload=e=>{
-      const url=URL.createObjectURL(new Blob([e.target.result]));
-      let layer;
-      if(file.name.toLowerCase().endsWith('.kml')){
-        layer=omnivore.kml(url,null,L.geoJson(null,{style:{color,weight:2,fillOpacity:0.15,fillColor:color}}));
+
+    let kmlText='';
+    try{
+      if(file.name.toLowerCase().endsWith('.kmz')){
+        // KMZ = ZIP con doc.kml dentro
+        const zip=await JSZip.loadAsync(file);
+        const kmlFile=Object.keys(zip.files).find(f=>f.endsWith('.kml'));
+        if(!kmlFile){alert('No se encontró archivo KML dentro del KMZ.');return;}
+        kmlText=await zip.files[kmlFile].async('string');
       } else {
-        layer=omnivore.kmz(url,null,L.geoJson(null,{style:{color,weight:2,fillOpacity:0.15,fillColor:color}}));
+        kmlText=await file.text();
       }
-      layer.addTo(map);kmzLayers[name]=layer;
-      layer.on('ready',()=>{if(layer.getBounds&&layer.getBounds().isValid())map.fitBounds(layer.getBounds(),{padding:[20,20]});});
-      // Add to panel
-      const id='lyr-'+Date.now();
-      const item=document.createElement('div');item.className='layer-item';
-      item.innerHTML=`<input type="checkbox" id="${id}" checked/><div class="layer-dot" style="background:${color}"></div>${name}<button style="margin-left:auto;background:none;border:none;cursor:pointer;color:#c62828;font-size:12px" data-lname="${name}">✕</button>`;
-      item.querySelector('input').addEventListener('change',function(){if(this.checked)layer.addTo(map);else map.removeLayer(layer);});
-      item.querySelector('button').addEventListener('click',()=>{map.removeLayer(layer);delete kmzLayers[name];item.remove();});
-      document.getElementById('kmz-layers-list').appendChild(item);
-    };
-    reader.readAsArrayBuffer(file);
+    }catch(e){alert('Error al leer el archivo: '+e.message);return;}
+
+    // Parse KML to GeoJSON via DOMParser
+    const parser=new DOMParser();
+    const kmlDoc=parser.parseFromString(kmlText,'text/xml');
+    const layer=L.geoJson(kmlToGeoJSON(kmlDoc),{
+      style:()=>({color,weight:2.5,fillColor:color,fillOpacity:0.15}),
+      pointToLayer:(_,latlng)=>L.circleMarker(latlng,{radius:6,color,fillColor:color,fillOpacity:.8,weight:2}),
+      onEachFeature:(feature,lyr)=>{
+        if(feature.properties?.name)lyr.bindPopup(`<b>${feature.properties.name}</b>${feature.properties.description?'<br>'+feature.properties.description:''}`);
+      }
+    }).addTo(map);
+    kmzLayers[name]=layer;
+    try{const b=layer.getBounds();if(b.isValid())map.fitBounds(b,{padding:[20,20]});}catch{}
+
+    // Add toggle to panel
+    const uid='lyr-'+Date.now();
+    const item=document.createElement('div');item.className='layer-item';
+    item.innerHTML=`<input type="checkbox" id="${uid}" checked/><div class="layer-dot" style="background:${color}"></div><span style="flex:1;font-size:11px">${name}</span><button style="background:none;border:none;cursor:pointer;color:#c62828;font-size:12px">✕</button>`;
+    item.querySelector('input').addEventListener('change',function(){if(this.checked)layer.addTo(map);else map.removeLayer(layer);});
+    item.querySelector('button').addEventListener('click',()=>{map.removeLayer(layer);delete kmzLayers[name];item.remove();});
+    document.getElementById('kmz-layers-list').appendChild(item);
     this.value='';
   });
+
+  // KML → GeoJSON parser
+  function kmlToGeoJSON(kmlDoc){
+    const features=[];
+    const placemarks=kmlDoc.querySelectorAll('Placemark');
+    placemarks.forEach(pm=>{
+      const name=pm.querySelector('name')?.textContent||'';
+      const desc=pm.querySelector('description')?.textContent||'';
+      const props={name,description:desc};
+      // Polygon
+      pm.querySelectorAll('Polygon').forEach(poly=>{
+        const outer=poly.querySelector('outerBoundaryIs coordinates')?.textContent||poly.querySelector('outerBoundaryIs')?.querySelector('coordinates')?.textContent||'';
+        const coords=outer.trim().split(/\s+/).map(c=>{const[lng,lat]=c.split(',').map(Number);return[lng,lat];}).filter(c=>!isNaN(c[0]));
+        if(coords.length>2)features.push({type:'Feature',properties:props,geometry:{type:'Polygon',coordinates:[coords]}});
+      });
+      // LineString
+      pm.querySelectorAll('LineString').forEach(ls=>{
+        const raw=ls.querySelector('coordinates')?.textContent||'';
+        const coords=raw.trim().split(/\s+/).map(c=>{const[lng,lat]=c.split(',').map(Number);return[lng,lat];}).filter(c=>!isNaN(c[0]));
+        if(coords.length>1)features.push({type:'Feature',properties:props,geometry:{type:'LineString',coordinates:coords}});
+      });
+      // Point
+      pm.querySelectorAll('Point').forEach(pt=>{
+        const raw=pt.querySelector('coordinates')?.textContent||'';
+        const[lng,lat]=raw.trim().split(',').map(Number);
+        if(!isNaN(lng))features.push({type:'Feature',properties:props,geometry:{type:'Point',coordinates:[lng,lat]}});
+      });
+      // MultiGeometry
+      pm.querySelectorAll('MultiGeometry Polygon').forEach(poly=>{
+        const outer=poly.querySelector('outerBoundaryIs coordinates')?.textContent||poly.querySelector('outerBoundaryIs')?.querySelector('coordinates')?.textContent||'';
+        const coords=outer.trim().split(/\s+/).map(c=>{const[lng,lat]=c.split(',').map(Number);return[lng,lat];}).filter(c=>!isNaN(c[0]));
+        if(coords.length>2)features.push({type:'Feature',properties:props,geometry:{type:'Polygon',coordinates:[coords]}});
+      });
+    });
+    return{type:'FeatureCollection',features};
+  }
 
   map.on('click',e=>{
     if(pickMode){const{lat,lng}=e.latlng;document.getElementById('f-lat').value=lat.toFixed(6);document.getElementById('f-lng').value=lng.toFixed(6);if(tmpMk)map.removeLayer(tmpMk);tmpMk=L.marker([lat,lng]).addTo(map);setPickMode(false);document.getElementById('overlay-obra').classList.add('open');formDirty=true;geoDetect(lat,lng);return;}
@@ -938,8 +1029,8 @@ function initMap(){
   map.on('dblclick',()=>{if(traceMode)stopTrace(true);});
 }
 
-// Wait for Leaflet + Omnivore to load then init
-function checkAndInit(){if(typeof L!=='undefined'&&typeof omnivore!=='undefined')initMap();else setTimeout(checkAndInit,100);}
+// Wait for Leaflet + JSZip then init
+function checkAndInit(){if(typeof L!=='undefined'&&typeof JSZip!=='undefined')initMap();else setTimeout(checkAndInit,100);}
 checkAndInit();
 </script>
 </body>
