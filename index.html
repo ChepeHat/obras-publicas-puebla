@@ -424,7 +424,7 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot }
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig={apiKey:"AIzaSyA7Pk8IwoR45PmUUvIHWxb6cpU9rSh1Sgs",authDomain:"obras-publicas-puebla.firebaseapp.com",projectId:"obras-publicas-puebla",storageBucket:"obras-publicas-puebla.firebasestorage.app",messagingSenderId:"1040966007077",appId:"1:1040966007077:web:956b2ee0cde6aa63c202cc"};
@@ -508,6 +508,21 @@ async function saveObra(o){
 async function deleteObraFS(id){showSaving();await deleteDoc(doc(db,'obras',id));}
 async function saveCatFS(c){showSaving();await setDoc(doc(db,'categorias',c.id),c);}
 async function deleteCatFS(id){showSaving();await deleteDoc(doc(db,'categorias',id));}
+
+// ── KMZ/KML PERSISTENCE ──
+async function saveCapaFS(capa){
+  showSaving();
+  await setDoc(doc(db,'capas',capa.id),capa);
+}
+async function deleteCapaFS(id){
+  showSaving();
+  await deleteDoc(doc(db,'capas',id));
+}
+async function loadCapasFS(){
+  const snap=await getDocs(collection(db,'capas'));
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+}
+
 
 // ── IMAGE ──
 function compressImage(b,maxW=1200,q=.78){return new Promise(r=>{const i=new Image();i.onload=()=>{const s=Math.min(1,maxW/i.width),w=Math.round(i.width*s),h=Math.round(i.height*s),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);r(c.toDataURL('image/jpeg',q));};i.src=b;});}
@@ -891,19 +906,7 @@ async function initMap(){
   };
   TILES.carto.addTo(map);
 
-  // Función 1: Cargar límite real del municipio de Puebla desde OSM
-  const worldPolygon=[[90,-180],[90,180],[-90,180],[-90,-180],[90,-180]];
-  let worldPoly=null;
-  const pueblaCoords=await loadPueblaBoundary();
-  if(pueblaCoords&&pueblaCoords.length>0){
-    PUEBLA_BOUNDS=pueblaCoords;
-    worldPoly=L.polygon([worldPolygon,pueblaCoords],{color:'#4a1942',weight:2.5,fillColor:'#000',fillOpacity:0.22,interactive:false}).addTo(map);
-  } else {
-    // Fallback: polígono aproximado
-    const fallback=[[19.19,-98.28],[19.20,-98.15],[19.18,-98.04],[19.14,-97.97],[19.08,-97.95],[19.00,-97.96],[18.93,-98.01],[18.88,-98.08],[18.86,-98.16],[18.87,-98.24],[18.91,-98.30],[18.96,-98.34],[19.02,-98.35],[19.08,-98.33],[19.14,-98.31],[19.19,-98.28]];
-    PUEBLA_BOUNDS=fallback;
-    worldPoly=L.polygon([worldPolygon,fallback],{color:'#4a1942',weight:2.5,fillColor:'#000',fillOpacity:0.22,interactive:false}).addTo(map);
-  }
+  // Sin polígono de límite visible — solo la restricción de navegación se mantiene
 
   // Style toggle
   const btn=document.createElement('button');
@@ -935,34 +938,13 @@ async function initMap(){
   layersBtn.addEventListener('click',()=>layersPanel.classList.toggle('open'));
   document.addEventListener('click',e=>{if(!e.target.closest('#btn-layers-map')&&!e.target.closest('#layers-panel'))layersPanel.classList.remove('open');});
 
-  // Municipio boundary toggle
-  document.getElementById('lyr-municipio').addEventListener('change',function(){
-    if(worldPoly){if(this.checked)worldPoly.addTo(map);else map.removeLayer(worldPoly);}
-  });
 
-  // KMZ/KML upload usando JSZip + parser nativo
+
+  // KMZ/KML upload — guarda en Cloudinary + Firestore
   const kmzColors=['#E65100','#1565C0','#2E7D32','#880E4F','#F57F17','#006064'];
   let kmzCount=0;
-  document.getElementById('kmz-upload-btn').onclick=()=>document.getElementById('kmz-file').click();
-  document.getElementById('kmz-file').addEventListener('change',async function(){
-    if(!this.files[0])return;
-    const file=this.files[0],name=file.name.replace(/\.(kmz|kml)$/i,'');
-    const color=kmzColors[kmzCount%kmzColors.length];kmzCount++;
 
-    let kmlText='';
-    try{
-      if(file.name.toLowerCase().endsWith('.kmz')){
-        // KMZ = ZIP con doc.kml dentro
-        const zip=await JSZip.loadAsync(file);
-        const kmlFile=Object.keys(zip.files).find(f=>f.endsWith('.kml'));
-        if(!kmlFile){alert('No se encontró archivo KML dentro del KMZ.');return;}
-        kmlText=await zip.files[kmlFile].async('string');
-      } else {
-        kmlText=await file.text();
-      }
-    }catch(e){alert('Error al leer el archivo: '+e.message);return;}
-
-    // Parse KML to GeoJSON via DOMParser
+  function addKmzLayer(kmlText, name, color, capaId, saveToCloud){
     const parser=new DOMParser();
     const kmlDoc=parser.parseFromString(kmlText,'text/xml');
     const layer=L.geoJson(kmlToGeoJSON(kmlDoc),{
@@ -972,18 +954,71 @@ async function initMap(){
         if(feature.properties?.name)lyr.bindPopup(`<b>${feature.properties.name}</b>${feature.properties.description?'<br>'+feature.properties.description:''}`);
       }
     }).addTo(map);
-    kmzLayers[name]=layer;
-    try{const b=layer.getBounds();if(b.isValid())map.fitBounds(b,{padding:[20,20]});}catch{}
+    kmzLayers[capaId]=layer;
+    try{const b=layer.getBounds();if(b.isValid()&&saveToCloud)map.fitBounds(b,{padding:[20,20]});}catch{}
 
-    // Add toggle to panel
-    const uid='lyr-'+Date.now();
+    const uid='lyr-'+capaId;
     const item=document.createElement('div');item.className='layer-item';
-    item.innerHTML=`<input type="checkbox" id="${uid}" checked/><div class="layer-dot" style="background:${color}"></div><span style="flex:1;font-size:11px">${name}</span><button style="background:none;border:none;cursor:pointer;color:#c62828;font-size:12px">✕</button>`;
+    item.innerHTML=`<input type="checkbox" id="${uid}" checked/><div class="layer-dot" style="background:${color}"></div><span style="flex:1;font-size:11px">${name}</span><button style="background:none;border:none;cursor:pointer;color:#c62828;font-size:12px" title="Eliminar capa">✕</button>`;
     item.querySelector('input').addEventListener('change',function(){if(this.checked)layer.addTo(map);else map.removeLayer(layer);});
-    item.querySelector('button').addEventListener('click',()=>{map.removeLayer(layer);delete kmzLayers[name];item.remove();});
+    item.querySelector('button').addEventListener('click',async()=>{
+      map.removeLayer(layer);delete kmzLayers[capaId];item.remove();
+      if(isEditor) await deleteCapaFS(capaId);
+    });
     document.getElementById('kmz-layers-list').appendChild(item);
+    return layer;
+  }
+
+  document.getElementById('kmz-upload-btn').onclick=()=>{ if(!isEditor){alert('Solo los editores pueden agregar capas.');return;} document.getElementById('kmz-file').click(); };
+  document.getElementById('kmz-file').addEventListener('change',async function(){
+    if(!this.files[0])return;
+    const file=this.files[0], name=file.name.replace(/\.(kmz|kml)$/i,'');
+    const color=kmzColors[kmzCount%kmzColors.length]; kmzCount++;
+    const capaId='capa-'+Date.now();
+    document.getElementById('kmz-upload-btn').textContent='⏳ Subiendo…';
+
+    let kmlText='';
+    try{
+      if(file.name.toLowerCase().endsWith('.kmz')){
+        const zip=await JSZip.loadAsync(file);
+        const kmlFile=Object.keys(zip.files).find(f=>f.endsWith('.kml'));
+        if(!kmlFile){alert('No se encontró KML dentro del KMZ.');return;}
+        kmlText=await zip.files[kmlFile].async('string');
+      } else {
+        kmlText=await file.text();
+      }
+    }catch(e){alert('Error al leer: '+e.message);document.getElementById('kmz-upload-btn').textContent='📂 Subir archivo KMZ / KML';return;}
+
+    // Add to map immediately
+    addKmzLayer(kmlText, name, color, capaId, true);
+
+    // Guardar KML directamente en Firestore (es texto plano, tamaño manejable)
+    try{
+      // Firestore tiene límite de 1MB por doc; si el KML es muy grande, lo comprimimos
+      let kmlToStore=kmlText;
+      if(kmlText.length>800000){
+        // Simplificar: quitar comentarios y espacios extra
+        kmlToStore=kmlText.replace(/<!--[\s\S]*?-->/g,'').replace(/>\s+</g,'><').trim();
+      }
+      await saveCapaFS({id:capaId,name,color,kml:kmlToStore,visible:true});
+    }catch(e){console.warn('No se pudo guardar la capa:',e);alert('La capa se mostró en el mapa pero no se pudo guardar (archivo muy grande). Usa un KMZ con menos detalle.');}
+
+    document.getElementById('kmz-upload-btn').textContent='📂 Subir archivo KMZ / KML';
     this.value='';
   });
+
+  // Cargar capas guardadas desde Firestore (KML guardado como texto)
+  try{
+    const capas=await loadCapasFS();
+    for(const capa of capas){
+      try{
+        if(capa.kml){
+          addKmzLayer(capa.kml, capa.name, capa.color, capa.id, false);
+          kmzCount++;
+        }
+      }catch(e){console.warn('No se pudo cargar capa:',capa.name,e);}
+    }
+  }catch(e){console.warn('Error cargando capas:',e);}
 
   // KML → GeoJSON parser
   function kmlToGeoJSON(kmlDoc){
