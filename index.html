@@ -52,15 +52,23 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 #map-mode-bar{display:none;padding:9px 16px;font-size:12px;font-weight:600;text-align:center;flex-shrink:0}
 #map-mode-bar.pick{display:flex;justify-content:center;align-items:center;gap:8px;background:#E3F2FD;border-bottom:2px solid #1565C0;color:#0D47A1}
 #map-mode-bar.trace{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;background:#E8F5E9;border-bottom:2px solid #2E7D32;color:#1B5E20}
-#controls{background:#fff;padding:7px 12px;display:flex;gap:7px;flex-wrap:wrap;border-bottom:1px solid #e0e0e0;flex-shrink:0;align-items:center}
-.filter-btn{border:1.5px solid #ddd;background:#fff;padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:500;color:#555}
+#controls{background:#fff;padding:6px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #e0e0e0;flex-shrink:0;align-items:center}
+.filter-btn{border:1.5px solid #ddd;background:#fff;padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:500;color:#555;white-space:nowrap}
 .filter-btn.active{color:#fff;border-color:transparent}
 .filter-btn[data-status="todas"].active{background:#4a1942}
 .filter-btn[data-status="proyectada"].active{background:#E67E22}
 .filter-btn[data-status="proceso"].active{background:#1565C0}
 .filter-btn[data-status="terminada"].active{background:#2E7D32}
-#search{border:1.5px solid #ddd;border-radius:20px;padding:5px 12px;font-size:12px;outline:none;width:160px;color:#333}
+#search{border:1.5px solid #ddd;border-radius:20px;padding:5px 12px;font-size:12px;outline:none;width:150px;color:#333}
 #search:focus{border-color:#4a1942}
+.ctrl-sep{width:1px;background:#e0e0e0;height:20px;flex-shrink:0}
+.ctrl-select{border:1.5px solid #ddd;border-radius:20px;padding:4px 10px;font-size:11px;outline:none;color:#555;background:#fff;cursor:pointer;font-weight:500}
+.ctrl-select.active-filter{border-color:#4a1942;color:#4a1942;background:#f5edf4;font-weight:700}
+#btn-clear-filters{border:none;background:none;color:#c62828;font-size:11px;font-weight:700;cursor:pointer;padding:4px 6px;border-radius:20px;display:none}
+#btn-clear-filters:hover{background:#ffebee}
+#active-filters-bar{background:#f5edf4;border-bottom:1px solid #e0d0de;padding:4px 12px;display:none;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.active-filter-chip{background:#4a1942;color:#fff;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:600;display:flex;align-items:center;gap:4px}
+.active-filter-chip button{background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:12px;padding:0;line-height:1}
 #main{display:flex;flex:1;overflow:hidden;min-height:0}
 #map{flex:1;min-width:0;position:relative}
 #panel{width:290px;background:#fff;border-left:1px solid #e0e0e0;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden}
@@ -205,12 +213,32 @@ body{display:flex;flex-direction:column;background:#f0ede8}
 </div>
 <div id="map-mode-bar"></div>
 <div id="controls">
-  <input id="search" type="text" placeholder="Buscar obra o colonia..."/>
+  <input id="search" type="text" placeholder="Buscar obra…"/>
+  <div class="ctrl-sep"></div>
   <button class="filter-btn active" data-status="todas">Todas</button>
   <button class="filter-btn" data-status="proyectada">Proyectadas</button>
   <button class="filter-btn" data-status="proceso">En proceso</button>
   <button class="filter-btn" data-status="terminada">Terminadas</button>
+  <div class="ctrl-sep"></div>
+  <select id="filter-cat" class="ctrl-select"><option value="">Categoría…</option></select>
+  <select id="filter-year" class="ctrl-select">
+    <option value="">Año…</option>
+    <option>2024</option><option>2025</option><option>2026</option>
+  </select>
+  <select id="filter-junta" class="ctrl-select">
+    <option value="">Junta Auxiliar…</option>
+    <option>Zona Metropolitana</option><option>Ignacio Romero Vargas</option>
+    <option>Ignacio Zaragoza</option><option>La Libertad</option><option>La Resurrección</option>
+    <option>San Andrés Azumiatla</option><option>San Baltazar Campeche</option>
+    <option>San Baltazar Tetela</option><option>San Felipe Hueyotlipan</option>
+    <option>San Francisco Totimehuacán</option><option>San Jerónimo Caleras</option>
+    <option>San Miguel Canoa</option><option>San Pablo Xochimehuacán</option>
+    <option>San Pedro Zacachimalpa</option><option>Santa María Guadalupe Tecola</option>
+    <option>Santa María Xonacatepec</option><option>Santo Tomás Chautla</option>
+  </select>
+  <button id="btn-clear-filters">✕ Limpiar</button>
 </div>
+<div id="active-filters-bar"></div>
 
 <div id="main">
   <div id="map">
@@ -454,7 +482,7 @@ let cats=[],obras=[],markers={},polylines={},labelMarkers={};
 let editId=null,isEditor=false,currentUser=null;
 let pickMode=false,traceMode=false,tmpMk=null;
 let currentTramo=[],pendingTrace=[],livePolyline=null,traceMarkers=[];
-let filt='todas',q='',currentImgBase64='',formDirty=false;
+let filt='todas',q='',filterCat='',filterYear='',filterJunta='',currentImgBase64='',formDirty=false;
 let editingCatId=null,currentPinColor='#E65100',currentPinIcon='';
 let groupMode='none',collapsedGroups=new Set();
 let map,TILES,currentStyle='carto';
@@ -574,7 +602,17 @@ document.getElementById('overlay-login').onclick=e=>{if(e.target.id==='overlay-l
 document.getElementById('btn-logout').onclick=()=>signOut(auth);
 
 // ── TIPO SELECT ──
-function buildTipoSelect(){const sel=document.getElementById('f-tipo'),prev=sel.value;sel.innerHTML='';cats.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);});if(prev)sel.value=prev;}
+function buildTipoSelect(){
+  const sel=document.getElementById('f-tipo'),prev=sel.value;
+  sel.innerHTML='';
+  cats.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);});
+  if(prev)sel.value=prev;
+  // También actualizar el select de filtro por categoría
+  const fc=document.getElementById('filter-cat'),prevfc=fc.value;
+  fc.innerHTML='<option value="">Categoría…</option>';
+  cats.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;fc.appendChild(o);});
+  if(prevfc)fc.value=prevfc;
+}
 
 // ── GEO DETECT ──
 let geoTimer=null;
@@ -645,7 +683,14 @@ function buildCard(o){
 }
 
 // ── MAP RENDER ──
-const filtered=()=>obras.filter(o=>{const ms=filt==='todas'||o.status===filt;const mq=!q||(o.nombre+o.colonia+o.junta+o.contrato).toLowerCase().includes(q);return ms&&mq;});
+const filtered=()=>obras.filter(o=>{
+  const ms=filt==='todas'||o.status===filt;
+  const mq=!q||(o.nombre+o.colonia+o.junta+o.contrato).toLowerCase().includes(q);
+  const mc=!filterCat||o.catId===filterCat;
+  const my=!filterYear||getYear(o)===filterYear;
+  const mj=!filterJunta||o.junta===filterJunta;
+  return ms&&mq&&mc&&my&&mj;
+});
 
 function clearLayers(){
   Object.values(markers).forEach(m=>{try{map.removeLayer(m);}catch{}});
@@ -747,8 +792,37 @@ function showFloatingCard(o){
   attachPopupEvents(o.id);
 }
 
-document.querySelectorAll('.filter-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');filt=b.dataset.status;renderAll();});});
-document.getElementById('search').addEventListener('input',e=>{q=e.target.value.toLowerCase();renderAll();});
+// ── FILTERS ──
+function updateActiveFiltersBar(){
+  const bar=document.getElementById('active-filters-bar');
+  const chips=[];
+  if(filterCat){const cat=getCat(filterCat);chips.push({label:'Cat: '+cat.name,clear:()=>{filterCat='';document.getElementById('filter-cat').value='';document.getElementById('filter-cat').classList.remove('active-filter');update();}});}
+  if(filterYear){chips.push({label:'Año: '+filterYear,clear:()=>{filterYear='';document.getElementById('filter-year').value='';document.getElementById('filter-year').classList.remove('active-filter');update();}});}
+  if(filterJunta){chips.push({label:filterJunta,clear:()=>{filterJunta='';document.getElementById('filter-junta').value='';document.getElementById('filter-junta').classList.remove('active-filter');update();}});}
+  bar.style.display=chips.length?'flex':'none';
+  bar.innerHTML=chips.length?'<span style="font-size:10px;color:#4a1942;font-weight:700;margin-right:2px">Filtros activos:</span>'+chips.map((c,i)=>`<span class="active-filter-chip">${c.label}<button data-i="${i}">×</button></span>`).join(''):'';
+  bar.querySelectorAll('button[data-i]').forEach(btn=>btn.onclick=()=>chips[+btn.dataset.i].clear());
+  document.getElementById('btn-clear-filters').style.display=chips.length?'':'none';
+}
+
+function update(){updateActiveFiltersBar();renderAll();}
+
+document.querySelectorAll('.filter-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');filt=b.dataset.status;update();
+  });
+});
+document.getElementById('search').addEventListener('input',e=>{q=e.target.value.toLowerCase();update();});
+document.getElementById('filter-cat').addEventListener('change',function(){filterCat=this.value;this.classList.toggle('active-filter',!!this.value);update();});
+document.getElementById('filter-year').addEventListener('change',function(){filterYear=this.value;this.classList.toggle('active-filter',!!this.value);update();});
+document.getElementById('filter-junta').addEventListener('change',function(){filterJunta=this.value;this.classList.toggle('active-filter',!!this.value);update();});
+document.getElementById('btn-clear-filters').onclick=()=>{
+  filterCat='';filterYear='';filterJunta='';
+  document.getElementById('filter-cat').value='';document.getElementById('filter-year').value='';document.getElementById('filter-junta').value='';
+  ['filter-cat','filter-year','filter-junta'].forEach(id=>document.getElementById(id).classList.remove('active-filter'));
+  update();
+};
 
 // ── OBRA MODAL ──
 document.getElementById('f-show-pin').addEventListener('change',function(){
