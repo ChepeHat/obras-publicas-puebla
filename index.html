@@ -897,11 +897,13 @@ async function initMap(){
   });
 
   TILES={
-    carto: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd',attribution:'&copy; OpenStreetMap &copy; CARTO'}),
-    // Función 2: satélite con calles - Esri WorldImagery + label overlay
+    carto: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:19,
+      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }),
     satellite: L.layerGroup([
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,attribution:'&copy; Esri'}),
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd',opacity:1,attribution:'&copy; CARTO'})
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,opacity:0.4,attribution:''})
     ])
   };
   TILES.carto.addTo(map);
@@ -914,8 +916,13 @@ async function initMap(){
   btn.innerHTML=`<img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/410/235" alt="Satélite"/><span>SATÉLITE</span>`;
   document.getElementById('map').appendChild(btn);
   btn.addEventListener('click',()=>{
-    if(currentStyle==='carto'){TILES.carto.removeFrom(map);TILES.satellite.addTo(map);currentStyle='satellite';btn.innerHTML=`<img src="https://a.basemaps.cartocdn.com/light_all/10/410/235.png" alt="Mapa"/><span>MAPA</span>`;}
-    else{TILES.satellite.removeFrom(map);TILES.carto.addTo(map);currentStyle='carto';btn.innerHTML=`<img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/410/235" alt="Satélite"/><span>SATÉLITE</span>`;}
+    if(currentStyle==='carto'){
+      TILES.carto.removeFrom(map);TILES.satellite.addTo(map);currentStyle='satellite';
+      btn.innerHTML=`<img src="https://tile.openstreetmap.org/14/3782/6934.png" alt="Mapa"/><span>MAPA</span>`;
+    } else {
+      TILES.satellite.removeFrom(map);TILES.carto.addTo(map);currentStyle='carto';
+      btn.innerHTML=`<img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/410/235" alt="Satélite"/><span>SATÉLITE</span>`;
+    }
   });
 
   // Layers panel (KMZ upload)
